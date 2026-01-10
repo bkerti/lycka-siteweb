@@ -1,5 +1,5 @@
-import { sql } from '../../../../lib/db.js';
-import { Service } from '../types.js';
+import { sql } from '../../../../lib/db';
+import { Service } from '../types';
 
 export const getAllServices = async (): Promise<Service[]> => {
   const { rows } = await sql<Service>`SELECT * FROM services ORDER BY title ASC`;

@@ -1,5 +1,5 @@
-import { sql } from '../../../../lib/db.js';
-import { HomeModel } from '../types.js';
+import { sql } from '../../../../lib/db';
+import { HomeModel } from '../types';
 
 export const getAllHomeModels = async (): Promise<HomeModel[]> => {
   const { rows } = await sql<HomeModel>`SELECT id, name, price, sqm, description, media, category, floors, livingRooms FROM home_models ORDER BY name ASC`;
