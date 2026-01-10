@@ -1,4 +1,4 @@
-import { sql } from '../../../../lib/db.js';
+import { sql } from '../db.js';
 import { Testimonial } from '../types.js';
 
 export const getAllTestimonials = async (): Promise<Testimonial[]> => {

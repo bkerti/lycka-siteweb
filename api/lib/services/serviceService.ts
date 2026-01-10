@@ -1,4 +1,4 @@
-import { sql } from '../../../../lib/db.js';
+import { sql } from '../db.js';
 import { Service } from '../types.js';
 
 export const getAllServices = async (): Promise<Service[]> => {

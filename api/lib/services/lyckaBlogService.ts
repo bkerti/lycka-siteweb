@@ -1,4 +1,4 @@
-import { sql } from '../../../../lib/db.js';
+import { sql } from '../db.js';
 import { BlogArticle, LyckaBlogComment } from '../types.js';
 
 export const getAllBlogArticles = async (): Promise<BlogArticle[]> => {

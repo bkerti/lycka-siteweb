@@ -1,4 +1,4 @@
-import { sql } from '../../../../lib/db.js';
+import { sql } from '../db.js';
 import { HomeModel } from '../types.js';
 
 export const getAllHomeModels = async (): Promise<HomeModel[]> => {
