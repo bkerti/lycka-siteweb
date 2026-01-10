@@ -4,17 +4,17 @@ import cors from 'cors';
 import type { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { put } from '@vercel/blob';
-import { db, sql } from './lib/db.js'; // Direct db access
+import { db, sql } from './lib/db'; // Direct db access
 import bcrypt from 'bcryptjs';
 
 // Import all refactored services
-import * as projectService from './lib/services/projectService.js';
-import * as serviceService from './lib/services/serviceService.js';
-import * as homeModelService from './lib/services/homeModelService.js';
-import * as lyckaBlogService from './lib/services/lyckaBlogService.js';
-import * as testimonialService from './lib/services/testimonialService.js';
-import * as mediaInteractionService from './lib/services/mediaInteractionService.js';
-import type { User } from './lib/types.js';
+import * as projectService from './lib/services/projectService';
+import * as serviceService from './lib/services/serviceService';
+import * as homeModelService from './lib/services/homeModelService';
+import * as lyckaBlogService from './lib/services/lyckaBlogService';
+import * as testimonialService from './lib/services/testimonialService';
+import * as mediaInteractionService from './lib/services/mediaInteractionService';
+import type { User } from './lib/types';
 
 const app = express();
 
