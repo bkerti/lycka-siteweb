@@ -12,6 +12,6 @@
     "isolatedModules": false,
     "resolveJsonModule": true
   },
-  "include": ["api/**/*.ts", "lib/**/*.ts"],
+  "include": ["api/**/*.ts"],
   "exclude": ["node_modules"]
 }
