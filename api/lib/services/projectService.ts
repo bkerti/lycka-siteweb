@@ -1,5 +1,5 @@
-import { sql } from '../../../../lib/db';
-import { Project } from '../types';
+import { sql } from '../../../../lib/db.js';
+import { Project } from '../types.js';
 
 export const getAllProjects = async (): Promise<Project[]> => {
   const { rows } = await sql<Project>`SELECT id, title, category, description, media, status, location, year, price FROM projects ORDER BY title ASC`;
