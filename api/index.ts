@@ -248,18 +248,18 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
 // --- Projects ---
 app.get('/api/projects', async (req, res) => res.json(await projectService.getAllProjects()));
 app.post('/api/projects', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.status(201).json(await projectService.createProject(req.body)));
-app.put('/api/projects/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await projectService.updateProject(req.params.id, req.body)));
+app.put('/api/projects/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await projectService.updateProject(req.params.id as string, req.body)));
 app.delete('/api/projects/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
-    await projectService.deleteProject(req.params.id);
+    await projectService.deleteProject(req.params.id as string);
     res.status(204).send();
 });
 
 // --- Services ---
 app.get('/api/services', async (req, res) => res.json(await serviceService.getAllServices()));
 app.post('/api/services', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.status(201).json(await serviceService.createService(req.body)));
-app.put('/api/services/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await serviceService.updateService(req.params.id, req.body)));
+app.put('/api/services/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await serviceService.updateService(req.params.id as string, req.body)));
 app.delete('/api/services/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
-    await serviceService.deleteService(req.params.id);
+    await serviceService.deleteService(req.params.id as string);
     res.status(204).send();
 });
 
@@ -267,9 +267,9 @@ app.delete('/api/services/:id', authenticateToken, authorizeRoles(['admin', 'sup
 // --- Home Models ---
 app.get('/api/homemodels', async (req, res) => res.json(await homeModelService.getAllHomeModels()));
 app.post('/api/homemodels', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.status(201).json(await homeModelService.createHomeModel(req.body)));
-app.put('/api/homemodels/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await homeModelService.updateHomeModel(req.params.id, req.body)));
+app.put('/api/homemodels/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await homeModelService.updateHomeModel(req.params.id as string, req.body)));
 app.delete('/api/homemodels/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
-    await homeModelService.deleteHomeModel(req.params.id);
+    await homeModelService.deleteHomeModel(req.params.id as string);
     res.status(204).send();
 });
 
@@ -281,37 +281,37 @@ app.post('/api/testimonials', async (req, res) => {
     res.status(201).json(await testimonialService.createTestimonial(req.body));
 });
 app.delete('/api/testimonials/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
-    await testimonialService.deleteTestimonial(req.params.id);
+    await testimonialService.deleteTestimonial(req.params.id as string);
     res.status(204).send();
 });
 
 // --- Lycka Blog ---
 app.get('/api/lycka-blog', async (req, res) => res.json(await lyckaBlogService.getAllBlogArticles()));
 app.post('/api/lycka-blog', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.status(201).json(await lyckaBlogService.createBlogArticle(req.body)));
-app.put('/api/lycka-blog/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await lyckaBlogService.updateBlogArticle(req.params.id, req.body)));
+app.put('/api/lycka-blog/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await lyckaBlogService.updateBlogArticle(req.params.id as string, req.body)));
 app.delete('/api/lycka-blog/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
-    await lyckaBlogService.deleteBlogArticle(req.params.id);
+    await lyckaBlogService.deleteBlogArticle(req.params.id as string);
     res.status(204).send();
 });
-app.get('/api/lycka-blog/:articleId/comments', async (req, res) => res.json(await lyckaBlogService.getCommentsForArticle(req.params.articleId)));
-app.post('/api/lycka-blog/:articleId/comments', async (req, res) => res.status(201).json(await lyckaBlogService.createCommentForArticle(req.params.articleId, req.body)));
+app.get('/api/lycka-blog/:articleId/comments', async (req, res) => res.json(await lyckaBlogService.getCommentsForArticle(req.params.articleId as string)));
+app.post('/api/lycka-blog/:articleId/comments', async (req, res) => res.status(201).json(await lyckaBlogService.createCommentForArticle(req.params.articleId as string, req.body)));
 app.delete('/api/lycka-blog/comments/:commentId', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
-    await lyckaBlogService.deleteComment(req.params.commentId);
+    await lyckaBlogService.deleteComment(req.params.commentId as string);
     res.status(204).send();
 });
 
 
 // --- Media Interactions ---
-app.get('/api/media/:mediaId/interactions', async (req, res) => res.json(await mediaInteractionService.getInteractionsForMedia(req.params.mediaId)));
+app.get('/api/media/:mediaId/interactions', async (req, res) => res.json(await mediaInteractionService.getInteractionsForMedia(req.params.mediaId as string)));
 app.post('/api/media/:mediaId/comments', async (req, res) => {
     if (req.body.subject) return res.status(200).send(); // Honeypot
-    res.status(201).json(await mediaInteractionService.addCommentToMedia(req.params.mediaId, req.body));
+    res.status(201).json(await mediaInteractionService.addCommentToMedia(req.params.mediaId as string, req.body));
 });
 app.delete('/api/media/:mediaId/comments/:commentId', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
-    await mediaInteractionService.deleteCommentFromMedia(req.params.commentId);
+    await mediaInteractionService.deleteCommentFromMedia(req.params.commentId as string);
     res.status(204).send();
 });
-app.post('/api/media/:mediaId/reactions', async (req, res) => res.status(201).json(await mediaInteractionService.addReactionToMedia(req.params.mediaId, req.body)));
+app.post('/api/media/:mediaId/reactions', async (req, res) => res.status(201).json(await mediaInteractionService.addReactionToMedia(req.params.mediaId as string, req.body)));
 app.get('/api/interactions', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await mediaInteractionService.getAllInteractions()));
 
 // --- Analytics ---
