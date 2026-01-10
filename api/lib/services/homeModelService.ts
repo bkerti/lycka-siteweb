@@ -10,7 +10,7 @@ export const createHomeModel = async (homeModelData: Omit<HomeModel, 'id'>): Pro
   const { name, price, sqm, description, media, category, floors, livingRooms } = homeModelData;
   const { rows } = await sql<HomeModel>`
     INSERT INTO home_models (name, price, sqm, description, media, category, floors, livingRooms) 
-    VALUES (${name}, ${price}, ${sqm}, ${description}, ${JSON.stringify(media)}, ${category}, ${floors}, ${livingRooms}) 
+    VALUES (${name}, ${price}, ${sqm}, ${description}, ${media as any}, ${category}, ${floors}, ${livingRooms}) 
     RETURNING *
   `;
   return rows[0];
@@ -20,7 +20,7 @@ export const updateHomeModel = async (id: string, homeModelData: Partial<Omit<Ho
   const { name, price, sqm, description, media, category, floors, livingRooms } = homeModelData;
   const { rows } = await sql<HomeModel>`
     UPDATE home_models 
-    SET name = ${name}, price = ${price}, sqm = ${sqm}, description = ${description}, media = ${JSON.stringify(media)}, category = ${category}, floors = ${floors}, livingRooms = ${livingRooms} 
+    SET name = ${name}, price = ${price}, sqm = ${sqm}, description = ${description}, media = ${media as any}, category = ${category}, floors = ${floors}, livingRooms = ${livingRooms} 
     WHERE id = ${id} 
     RETURNING *
   `;
