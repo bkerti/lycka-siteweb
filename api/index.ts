@@ -232,8 +232,8 @@ app.get('/api', (req, res) => {
 
       // Seed Lycka Blog
       const blogToSeed = [
-        { title: 'Les tendances de l''architecture durable', content: 'Contenu de l''article sur l''architecture durable...', media: [{url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=500&auto=format", type: "image"}] },
-        { title: 'Comment choisir le bon architecte pour votre projet', content: 'Contenu de l''article sur le choix d''un architecte...', media: [{url: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=500&auto=format", type: "image"}] }
+        { title: 'Les tendances de l\\'architecture durable', content: 'Contenu de l\\'article sur l\\'architecture durable...', media: [{url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=500&auto=format", type: "image"}] },
+        { title: 'Comment choisir le bon architecte pour votre projet', content: 'Contenu de l\\'article sur le choix d\\'un architecte...', media: [{url: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=500&auto=format", type: "image"}] }
       ];
       for (const article of blogToSeed) {
         await client.sql`
