@@ -206,8 +206,8 @@ app.get('/api', (req, res) => {
 
       // Seed Services
       const servicesToSeed = [
-        { title: 'conception-architecturale', description: 'Notre service de conception architecturale...', icon: 'calculator', imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format', features: ["Études préliminaires", "Conception de plans d\\'ensemble", "Modélisations et rendus 3D", "Adaptation aux contraintes du site", "Optimisation des espaces"] },
-        { title: 'Architecture et design intérieur', description: 'Notre service de décoration intérieure...', icon: '3d', imageUrl: 'https://images.unsplash.com/photo-1498050108023-c249f4df085?w=500&auto=format', features: ["Conception d\\'ambiances", "Sélection des matériaux et finitions", "Aménagement d\\'espaces", "Conseils en éclairage", "Choix du mobilier et des accessoires"] }
+        { title: 'conception-architecturale', description: 'Notre service de conception architecturale...', icon: 'calculator', imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format', features: [`Études préliminaires`, `Conception de plans d'ensemble`, `Modélisations et rendus 3D`, `Adaptation aux contraintes du site`, `Optimisation des espaces`] },
+        { title: 'Architecture et design intérieur', description: 'Notre service de décoration intérieure...', icon: '3d', imageUrl: 'https://images.unsplash.com/photo-1498050108023-c249f4df085?w=500&auto=format', features: [`Conception d'ambiances`, `Sélection des matériaux et finitions`, `Aménagement d'espaces`, `Conseils en éclairage`, `Choix du mobilier et des accessoires`] }
       ];
       for (const service of servicesToSeed) {
         await client.sql`
@@ -232,8 +232,8 @@ app.get('/api', (req, res) => {
 
       // Seed Lycka Blog
       const blogToSeed = [
-        { title: 'Les tendances de l\\'architecture durable', content: 'Contenu de l\\'article sur l\\'architecture durable...', media: [{url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=500&auto=format", type: "image"}] },
-        { title: 'Comment choisir le bon architecte pour votre projet', content: 'Contenu de l\\'article sur le choix d\\'un architecte...', media: [{url: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=500&auto=format", type: "image"}] }
+        { title: `Les tendances de l'architecture durable`, content: `Contenu de l'article sur l'architecture durable...`, media: [{url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=500&auto=format", type: "image"}] },
+        { title: `Comment choisir le bon architecte pour votre projet`, content: `Contenu de l'article sur le choix d'un architecte...`, media: [{url: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=500&auto=format", type: "image"}] }
       ];
       for (const article of blogToSeed) {
         await client.sql`
