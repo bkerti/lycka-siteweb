@@ -193,11 +193,6 @@ app.get('/api', (req, res) => {
 
       // Seed Projects
       const projectsToSeed = [
-        { title: 'Tour résidentielle à Paris', category: 'Résidentiel', description: 'Un complexe résidentiel moderne.', media: [{url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=500&auto=format", type: "image"}], status: 'Terminé', location: 'Paris, France', year: '2023', price: 5000000 },
-        { title: 'Centre commercial Lycka', category: 'Commercial', description: 'Un centre commercial moderne.', media: [{url: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=500&auto=format", type: "image"}], status: 'En cours', location: 'Lyon, France', year: '2024', price: 12000000 }
-      ];
-      // Seed Projects
-      const projectsToSeed = [
         { title: 'Tour résidentielle à Paris', category: 'Résidentiel', description: 'Un complexe résidentiel moderne.', status: 'Terminé', location: 'Paris, France', year: '2023', price: 5000000 },
         { title: 'Centre commercial Lycka', category: 'Commercial', description: 'Un centre commercial moderne.', status: 'En cours', location: 'Lyon, France', year: '2024', price: 12000000 }
       ];
