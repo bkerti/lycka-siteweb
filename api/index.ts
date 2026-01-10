@@ -199,7 +199,7 @@ app.get('/api', (req, res) => {
       for (const project of projectsToSeed) {
         await client.sql`
           INSERT INTO projects (title, category, description, media, status, location, year, price)
-          VALUES (${project.title}, ${project.category}, ${project.description}, ${JSON.stringify(project.media)}::jsonb, ${project.status}, ${project.location}, ${project.year}, ${project.price})
+          VALUES (${project.title}, ${project.category}, ${project.description}, ${project.media as any}, ${project.status}, ${project.location}, ${project.year}, ${project.price})
           ON CONFLICT (title) DO NOTHING;
         `;
       }
@@ -212,7 +212,7 @@ app.get('/api', (req, res) => {
       for (const service of servicesToSeed) {
         await client.sql`
           INSERT INTO services (title, description, icon, imageUrl, features)
-          VALUES (${service.title}, ${service.description}, ${service.icon}, ${service.imageUrl}, ${JSON.stringify(service.features)}::jsonb)
+          VALUES (${service.title}, ${service.description}, ${service.icon}, ${service.imageUrl}, ${service.features as any})
           ON CONFLICT (title) DO NOTHING;
         `;
       }
@@ -225,7 +225,7 @@ app.get('/api', (req, res) => {
       for (const model of homeModelsToSeed) {
         await client.sql`
           INSERT INTO home_models (name, price, sqm, description, media, category, floors, livingRooms)
-          VALUES (${model.name}, ${model.price}, ${model.sqm}, ${model.description}, ${JSON.stringify(model.media)}::jsonb, ${model.category}, ${model.floors}, ${model.livingRooms})
+          VALUES (${model.name}, ${model.price}, ${model.sqm}, ${model.description}, ${model.media as any}, ${model.category}, ${model.floors}, ${model.livingRooms})
           ON CONFLICT (name) DO NOTHING;
         `;
       }
@@ -238,7 +238,7 @@ app.get('/api', (req, res) => {
       for (const article of blogToSeed) {
         await client.sql`
           INSERT INTO lycka_blog (title, content, media)
-          VALUES (${article.title}, ${article.content}, ${JSON.stringify(article.media)}::jsonb)
+          VALUES (${article.title}, ${article.content}, ${article.media as any})
           ON CONFLICT (title) DO NOTHING;
         `;
       }
