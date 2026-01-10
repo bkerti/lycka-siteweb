@@ -10,7 +10,7 @@ export const createProject = async (projectData: Omit<Project, 'id'>): Promise<P
   const { title, category, description, media, status, location, year, price } = projectData;
   const { rows } = await sql<Project>`
     INSERT INTO projects (title, category, description, media, status, location, year, price) 
-    VALUES (${title}, ${category}, ${description}, ${media as any}, ${status}, ${location}, ${year}, ${price}) 
+    VALUES (${title}, ${category}, ${description}, ${JSON.stringify(media)}::jsonb, ${status}, ${location}, ${year}, ${price}) 
     RETURNING *
   `;
   return rows[0];
@@ -20,7 +20,7 @@ export const updateProject = async (id: string, projectData: Partial<Omit<Projec
   const { title, category, description, media, status, location, year, price } = projectData;
   const { rows } = await sql<Project>`
     UPDATE projects 
-    SET title = ${title}, category = ${category}, description = ${description}, media = ${media as any}, status = ${status}, location = ${location}, year = ${year}, price = ${price} 
+    SET title = ${title}, category = ${category}, description = ${description}, media = ${JSON.stringify(media)}::jsonb, status = ${status}, location = ${location}, year = ${year}, price = ${price} 
     WHERE id = ${id} 
     RETURNING *
   `;
