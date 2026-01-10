@@ -11,7 +11,11 @@
     "noEmit": false,
     "allowJs": true,
     "skipLibCheck": true,
-    "isolatedModules": false
+    "isolatedModules": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/lib/*": ["lib/*"]
+    }
   },
   "include": ["api/**/*.ts", "lib/**/*.ts"],
   "exclude": ["node_modules"]
