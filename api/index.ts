@@ -61,7 +61,7 @@ app.get('/api', (req, res) => {
 });
 
 // --- DEV ONLY ---
-if (process.env.NODE_ENV !== 'production') {
+// if (process.env.NODE_ENV !== 'production') {
   app.get('/api/dev/setup-database', async (req, res) => {
     const client = await db.connect();
     try {
@@ -176,10 +176,10 @@ if (process.env.NODE_ENV !== 'production') {
       
       // Seed users
       const usersToSeed = [
-        { username: 'bkerti', role: 'super_admin', password: 'password123' },
-        { username: 'jordan', role: 'admin', password: 'password123' },
-        { username: 'franklin', role: 'admin', password: 'password123' },
-        { username: 'admin', role: 'admin', password: '0000' },
+        { username: 'bkerti', role: 'super_admin', password: 'lycka3310' },
+        { username: 'jordan', role: 'admin', password: 'lycka3310' },
+        { username: 'franklin', role: 'admin', password: 'lycka3310' },
+        { username: 'admin', role: 'admin', password: 'lycka3310' },
       ];
 
       for (const user of usersToSeed) {
@@ -201,7 +201,7 @@ if (process.env.NODE_ENV !== 'production') {
       client.release();
     }
   });
-}
+// }
 
 
 // --- Upload ---
