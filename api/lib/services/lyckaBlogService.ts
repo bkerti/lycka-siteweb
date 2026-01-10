@@ -6,21 +6,21 @@ export const getAllBlogArticles = async (): Promise<BlogArticle[]> => {
   return rows;
 };
 
-export const createBlogArticle = async (articleData: Omit<BlogArticle, 'id' | 'created_at'>): Promise<BlogArticle> => {
-  const { title, content, media } = articleData;
+export const createBlogArticle = async (articleData: Omit<BlogArticle, 'id' | 'created_at' | 'media'>): Promise<BlogArticle> => {
+  const { title, content } = articleData;
   const { rows } = await sql<BlogArticle>`
-    INSERT INTO lycka_blog (title, content, media) 
-    VALUES (${title}, ${content}, ${media as any}) 
+    INSERT INTO lycka_blog (title, content) 
+    VALUES (${title}, ${content}) 
     RETURNING *
   `;
   return rows[0];
 };
 
-export const updateBlogArticle = async (id: string, articleData: Partial<Omit<BlogArticle, 'id' | 'created_at'>>): Promise<BlogArticle | null> => {
-  const { title, content, media } = articleData;
+export const updateBlogArticle = async (id: string, articleData: Partial<Omit<BlogArticle, 'id' | 'created_at' | 'media'>>): Promise<BlogArticle | null> => {
+  const { title, content } = articleData;
   const { rows } = await sql<BlogArticle>`
     UPDATE lycka_blog 
-    SET title = ${title}, content = ${content}, media = ${media as any} 
+    SET title = ${title}, content = ${content} 
     WHERE id = ${id} 
     RETURNING *
   `;
