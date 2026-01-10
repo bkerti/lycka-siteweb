@@ -10,7 +10,7 @@ export const createBlogArticle = async (articleData: Omit<BlogArticle, 'id' | 'c
   const { title, content, media } = articleData;
   const { rows } = await sql<BlogArticle>`
     INSERT INTO lycka_blog (title, content, media) 
-    VALUES (${title}, ${content}, ${JSON.stringify(media)}) 
+    VALUES (${title}, ${content}, ${media}) 
     RETURNING *
   `;
   return rows[0];
@@ -20,7 +20,7 @@ export const updateBlogArticle = async (id: string, articleData: Partial<Omit<Bl
   const { title, content, media } = articleData;
   const { rows } = await sql<BlogArticle>`
     UPDATE lycka_blog 
-    SET title = ${title}, content = ${content}, media = ${JSON.stringify(media)} 
+    SET title = ${title}, content = ${content}, media = ${media} 
     WHERE id = ${id} 
     RETURNING *
   `;
