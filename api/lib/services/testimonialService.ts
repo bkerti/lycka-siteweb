@@ -1,5 +1,5 @@
-import { sql } from '../../../../lib/db';
-import { Testimonial } from '../types';
+import { sql } from '../../../../lib/db.js';
+import { Testimonial } from '../types.js';
 
 export const getAllTestimonials = async (): Promise<Testimonial[]> => {
   const { rows } = await sql<Testimonial>`SELECT * FROM testimonials ORDER BY created_at DESC`;

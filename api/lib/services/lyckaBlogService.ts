@@ -1,5 +1,5 @@
-import { sql } from '../../../../lib/db';
-import { BlogArticle, LyckaBlogComment } from '../types';
+import { sql } from '../../../../lib/db.js';
+import { BlogArticle, LyckaBlogComment } from '../types.js';
 
 export const getAllBlogArticles = async (): Promise<BlogArticle[]> => {
   const { rows } = await sql<BlogArticle>`SELECT * FROM lycka_blog ORDER BY created_at DESC`;

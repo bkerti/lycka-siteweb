@@ -1,5 +1,5 @@
-import { sql } from '../../../../lib/db';
-import { MediaComment, MediaReaction, AggregatedReaction } from '../types';
+import { sql } from '../../../../lib/db.js';
+import { MediaComment, MediaReaction, AggregatedReaction } from '../types.js';
 
 export const getInteractionsForMedia = async (mediaId: string): Promise<{ comments: MediaComment[]; reactions: { [key: string]: AggregatedReaction } }> => {
   const commentsResult = await sql<MediaComment>`SELECT * FROM media_comments WHERE media_id = ${mediaId} ORDER BY created_at DESC`;
