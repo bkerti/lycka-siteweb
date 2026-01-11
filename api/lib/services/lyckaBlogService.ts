@@ -6,25 +6,27 @@ export const getAllBlogArticles = async (): Promise<BlogArticle[]> => {
   return rows;
 };
 
-export const createBlogArticle = async (articleData: Omit<BlogArticle, 'id' | 'created_at' | 'media'>): Promise<BlogArticle> => {
-  const { title, content } = articleData;
-  const { rows } = await sql<BlogArticle>`
-    INSERT INTO lycka_blog (title, content) 
-    VALUES (${title}, ${content}) 
-    RETURNING *
-  `;
-  return rows[0];
+export const createBlogArticle = async (articleData: Omit<BlogArticle, 'id' | 'created_at'>): Promise<BlogArticle> => {
+  const { title, content, media } = articleData;
+  const { rows } = await sql(
+    `INSERT INTO lycka_blog (title, content, media) 
+     VALUES ($1, $2, $3) 
+     RETURNING *`,
+    [title, content, media]
+  );
+  return rows[0] as BlogArticle;
 };
 
-export const updateBlogArticle = async (id: string, articleData: Partial<Omit<BlogArticle, 'id' | 'created_at' | 'media'>>): Promise<BlogArticle | null> => {
-  const { title, content } = articleData;
-  const { rows } = await sql<BlogArticle>`
-    UPDATE lycka_blog 
-    SET title = ${title}, content = ${content} 
-    WHERE id = ${id} 
-    RETURNING *
-  `;
-  return rows[0] || null;
+export const updateBlogArticle = async (id: string, articleData: Partial<Omit<BlogArticle, 'id' | 'created_at'>>): Promise<BlogArticle | null> => {
+  const { title, content, media } = articleData;
+  const { rows } = await sql(
+    `UPDATE lycka_blog 
+     SET title = $1, content = $2, media = $3 
+     WHERE id = $4 
+     RETURNING *`,
+    [title, content, media, id]
+  );
+  return rows[0] as BlogArticle || null;
 };
 
 export const deleteBlogArticle = async (id: string): Promise<{ rowCount: number }> => {

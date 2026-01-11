@@ -6,25 +6,27 @@ export const getAllProjects = async (): Promise<Project[]> => {
   return rows;
 };
 
-export const createProject = async (projectData: Omit<Project, 'id' | 'media'>): Promise<Project> => {
-  const { title, category, description, status, location, year, price } = projectData;
-  const { rows } = await sql<Project>`
-    INSERT INTO projects (title, category, description, status, location, year, price) 
-    VALUES (${title}, ${category}, ${description}, ${status}, ${location}, ${year}, ${price}) 
-    RETURNING *
-  `;
-  return rows[0];
+export const createProject = async (projectData: Omit<Project, 'id'>): Promise<Project> => {
+  const { title, category, description, media, status, location, year, price } = projectData;
+  const { rows } = await sql(
+    `INSERT INTO projects (title, category, description, media, status, location, year, price) 
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+     RETURNING *`,
+    [title, category, description, media, status, location, year, price]
+  );
+  return rows[0] as Project;
 };
 
-export const updateProject = async (id: string, projectData: Partial<Omit<Project, 'id' | 'media'>>): Promise<Project | null> => {
-  const { title, category, description, status, location, year, price } = projectData;
-  const { rows } = await sql<Project>`
-    UPDATE projects 
-    SET title = ${title}, category = ${category}, description = ${description}, status = ${status}, location = ${location}, year = ${year}, price = ${price} 
-    WHERE id = ${id} 
-    RETURNING *
-  `;
-  return rows[0] || null;
+export const updateProject = async (id: string, projectData: Partial<Omit<Project, 'id'>>): Promise<Project | null> => {
+  const { title, category, description, media, status, location, year, price } = projectData;
+  const { rows } = await sql(
+    `UPDATE projects 
+     SET title = $1, category = $2, description = $3, media = $4, status = $5, location = $6, year = $7, price = $8 
+     WHERE id = $9 
+     RETURNING *`,
+    [title, category, description, media, status, location, year, price, id]
+  );
+  return rows[0] as Project || null;
 };
 
 export const deleteProject = async (id: string): Promise<{ rowCount: number }> => {

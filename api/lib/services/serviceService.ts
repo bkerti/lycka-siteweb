@@ -6,25 +6,27 @@ export const getAllServices = async (): Promise<Service[]> => {
   return rows;
 };
 
-export const createService = async (serviceData: Omit<Service, 'id' | 'features'>): Promise<Service> => {
-  const { title, description, icon, imageUrl } = serviceData;
-  const { rows } = await sql<Service>`
-    INSERT INTO services (title, description, icon, imageUrl) 
-    VALUES (${title}, ${description}, ${icon}, ${imageUrl}) 
-    RETURNING *
-  `;
-  return rows[0];
+export const createService = async (serviceData: Omit<Service, 'id'>): Promise<Service> => {
+  const { title, description, icon, imageUrl, features } = serviceData;
+  const { rows } = await sql(
+    `INSERT INTO services (title, description, icon, imageUrl, features) 
+     VALUES ($1, $2, $3, $4, $5) 
+     RETURNING *`,
+    [title, description, icon, imageUrl, features]
+  );
+  return rows[0] as Service;
 };
 
-export const updateService = async (id: string, serviceData: Partial<Omit<Service, 'id' | 'features'>>): Promise<Service | null> => {
-  const { title, description, icon, imageUrl } = serviceData;
-  const { rows } = await sql<Service>`
-    UPDATE services 
-    SET title = ${title}, description = ${description}, icon = ${icon}, imageUrl = ${imageUrl} 
-    WHERE id = ${id} 
-    RETURNING *
-  `;
-  return rows[0] || null;
+export const updateService = async (id: string, serviceData: Partial<Omit<Service, 'id'>>): Promise<Service | null> => {
+  const { title, description, icon, imageUrl, features } = serviceData;
+  const { rows } = await sql(
+    `UPDATE services 
+     SET title = $1, description = $2, icon = $3, imageUrl = $4, features = $5 
+     WHERE id = $6 
+     RETURNING *`,
+    [title, description, icon, imageUrl, features, id]
+  );
+  return rows[0] as Service || null;
 };
 
 export const deleteService = async (id: string): Promise<{ rowCount: number }> => {

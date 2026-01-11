@@ -191,54 +191,55 @@ app.get('/api', (req, res) => {
         `;
       }
 
-      // Seed Projects
-      const projectsToSeed = [
-        { title: 'Tour résidentielle à Paris', category: 'Résidentiel', description: 'Un complexe résidentiel moderne.', status: 'Terminé', location: 'Paris, France', year: '2023', price: 5000000 },
-        { title: 'Centre commercial Lycka', category: 'Commercial', description: 'Un centre commercial moderne.', status: 'En cours', location: 'Lyon, France', year: '2024', price: 12000000 }
-      ];
       for (const project of projectsToSeed) {
-        await client.sql`
-          INSERT INTO projects (title, category, description, status, location, year, price)
-          VALUES (${project.title}, ${project.category}, ${project.description}, ${project.status}, ${project.location}, ${project.year}, ${project.price})
-          ON CONFLICT (title) DO NOTHING;
-        `;
+        await client.query(
+          `INSERT INTO projects (title, category, description, media, status, location, year, price)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+           ON CONFLICT (title) DO NOTHING;`,
+          [project.title, project.category, project.description, project.media as any, project.status, project.location, project.year, project.price]
+        );
       }
 
       // Seed Services
       const servicesToSeed = [
-        { title: 'conception-architecturale', description: 'Notre service de conception architecturale...', icon: 'calculator', imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format'}
+        { title: 'conception-architecturale', description: 'Notre service de conception architecturale...', icon: 'calculator', imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format', features: [`Études préliminaires`, `Conception de plans d'ensemble`, `Modélisations et rendus 3D`, `Adaptation aux contraintes du site`, `Optimisation des espaces`] },
+        { title: 'Architecture et design intérieur', description: 'Notre service de décoration intérieure...', icon: '3d', imageUrl: 'https://images.unsplash.com/photo-1498050108023-c249f4df085?w=500&auto=format', features: [`Conception d'ambiances`, `Sélection des matériaux et finitions`, `Aménagement d'espaces`, `Conseils en éclairage`, `Choix du mobilier et des accessoires`] }
       ];
       for (const service of servicesToSeed) {
-        await client.sql`
-          INSERT INTO services (title, description, icon, imageUrl)
-          VALUES (${service.title}, ${service.description}, ${service.icon}, ${service.imageUrl})
-          ON CONFLICT (title) DO NOTHING;
-        `;
+        await client.query(
+          `INSERT INTO services (title, description, icon, imageUrl, features)
+           VALUES ($1, $2, $3, $4, $5)
+           ON CONFLICT (title) DO NOTHING;`,
+          [service.title, service.description, service.icon, service.imageUrl, service.features as any]
+        );
       }
 
       // Seed Home Models
       const homeModelsToSeed = [
-        { name: 'Villa Moderna', price: 350000, sqm: 180, description: 'Une maison moderne.', category: 'Luxe', floors: 2, livingRooms: 1 },
-        { name: 'Eco Cottage', price: 220000, sqm: 120, description: 'Une maison écologique.', category: 'Écologique', floors: 1, livingRooms: 1 }
+        { name: 'Villa Moderna', price: 350000, sqm: 180, description: 'Une maison moderne.', media: [{url: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=500&auto=format", type: "image"}], category: 'Luxe', floors: 2, livingRooms: 1 },
+        { name: 'Eco Cottage', price: 220000, sqm: 120, description: 'Une maison écologique.', media: [{url: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=500&auto=format", type: "image"}], category: 'Écologique', floors: 1, livingRooms: 1 }
       ];
       for (const model of homeModelsToSeed) {
-        await client.sql`
-          INSERT INTO home_models (name, price, sqm, description, category, floors, livingRooms)
-          VALUES (${model.name}, ${model.price}, ${model.sqm}, ${model.description}, ${model.category}, ${model.floors}, ${model.livingRooms})
-          ON CONFLICT (name) DO NOTHING;
-        `;
+        await client.query(
+          `INSERT INTO home_models (name, price, sqm, description, media, category, floors, livingRooms)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+           ON CONFLICT (name) DO NOTHING;`,
+          [model.name, model.price, model.sqm, model.description, model.media as any, model.category, model.floors, model.livingRooms]
+        );
       }
 
       // Seed Lycka Blog
       const blogToSeed = [
-        { title: `Les tendances de l'architecture durable`, content: `Contenu de l'article sur l'architecture durable...`}
+        { title: `Les tendances de l'architecture durable`, content: `Contenu de l'article sur l'architecture durable...`, media: [{url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=500&auto=format", type: "image"}] },
+        { title: `Comment choisir le bon architecte pour votre projet`, content: `Contenu de l'article sur le choix d'un architecte...`, media: [{url: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=500&auto=format", type: "image"}] }
       ];
       for (const article of blogToSeed) {
-        await client.sql`
-          INSERT INTO lycka_blog (title, content)
-          VALUES (${article.title}, ${article.content})
-          ON CONFLICT (title) DO NOTHING;
-        `;
+        await client.query(
+          `INSERT INTO lycka_blog (title, content, media)
+           VALUES ($1, $2, $3)
+           ON CONFLICT (title) DO NOTHING;`,
+          [article.title, article.content, article.media as any]
+        );
       }
       
       await client.sql`COMMIT`;
