@@ -320,32 +320,29 @@ app.get('/api/gallery-items', async (req, res) => {
             homeModelService.getAllHomeModels()
         ]);
 
-        // Standardize and combine
-        const projectMedia = projects.flatMap(project =>
-            (project.media || []).map(mediaItem => ({
-                ...mediaItem,
-                id: `${project.id}-${mediaItem.id}`, // Create a more unique ID
-                title: project.title,
-                section: 'projects', // Use 'projects' to match filter
-                category: project.category,
-                sourceId: project.id
-            }))
-        );
+        // Standardize projects
+        const standardizedProjects = projects.map(project => ({
+            id: project.id,
+            title: project.title,
+            description: project.description,
+            category: project.category,
+            media: project.media || [], // Keep the media array
+            section: 'projects',
+        }));
 
-        const homeModelMedia = homeModels.flatMap(homeModel =>
-            (homeModel.media || []).map(mediaItem => ({
-                ...mediaItem,
-                id: `${homeModel.id}-${mediaItem.id}`, // Create a more unique ID
-                title: homeModel.name,
-                section: 'lycka-home', // Use 'lycka-home' to match filter
-                category: homeModel.category,
-                sourceId: homeModel.id
-            }))
-        );
+        // Standardize home models
+        const standardizedHomeModels = homeModels.map(homeModel => ({
+            id: homeModel.id,
+            title: homeModel.name, // The name is the title
+            description: homeModel.description,
+            category: homeModel.category,
+            media: homeModel.media || [], // Keep the media array
+            section: 'lycka-home',
+        }));
 
-        const combinedMedia = [...projectMedia, ...homeModelMedia];
+        const combinedItems = [...standardizedProjects, ...standardizedHomeModels];
         
-        res.json(combinedMedia);
+        res.json(combinedItems);
     } catch (error) {
         console.error('Failed to fetch gallery items:', error);
         res.status(500).json({ error: 'Failed to fetch gallery items' });
