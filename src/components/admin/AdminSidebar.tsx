@@ -184,6 +184,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <AdminModeToggle />
         </div>
       </SidebarFooter>
-    </div> {/* Close the div */}
+    </div>
   );
 };
