@@ -194,37 +194,37 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           )}
         />
 
-        {/* Image Upload Field with Add button */}
-        <div className="space-y-2">
-            <FormLabel>Image du service</FormLabel>
-            <div className="flex flex-col gap-2">
-                <Input 
-                    type="file" 
-                    accept="image/*" 
-                    onChange={handleFileChange}
-                    className="flex-1"
-                />
-                {imagePreview && (
-                    <div className="flex items-center gap-2">
-                        <img src={imagePreview} alt="Aperçu" className="w-20 h-20 object-cover rounded-md" />
-                        <Button type="button" onClick={handleAddImage} disabled={!selectedFile}>
-                            <Upload className="mr-2" size={16} /> Ajouter l'image
-                        </Button>
-                    </div>
-                )}
-                <FormField
-                    control={form.control}
-                    name="imageUrl"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <Input type="hidden" {...field} /> {/* Hidden field to store the URL */}
-                            </FormControl>
-                        </FormItem>
+        <FormField
+          control={form.control}
+          name="imageUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image du service</FormLabel>
+              <FormControl>
+                <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
+                    <Input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleFileChange}
+                        className="flex-1"
+                    />
+                    {imagePreview && (
+                        <div className="flex items-center gap-2">
+                            <img src={imagePreview} alt="Aperçu" className="w-20 h-20 object-cover rounded-md" />
+                            <Button type="button" onClick={handleAddImage} disabled={!selectedFile}>
+                                <Upload className="mr-2" size={16} /> Ajouter l'image
+                            </Button>
+                        </div>
                     )}
-                />
-            </div>
-        </div>
+                    <Input type="hidden" {...field} />
+                  </div>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
