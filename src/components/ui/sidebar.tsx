@@ -525,11 +525,9 @@ const SidebarMenuButton = React.forwardRef<
     )
 
     if (!tooltip) {
-      return button;
+      return button
     }
 
-    return button;
-    /*
     if (typeof tooltip === "string") {
       tooltip = {
         children: tooltip,
@@ -547,7 +545,6 @@ const SidebarMenuButton = React.forwardRef<
         />
       </Tooltip>
     )
-    */
   }
 )
 SidebarMenuButton.displayName = "SidebarMenuButton"
