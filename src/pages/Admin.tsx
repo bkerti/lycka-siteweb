@@ -41,24 +41,10 @@ const Admin = () => {
       <Toaster />
       <HomeModelsProvider>
         <ProjectsProvider>
-          <SidebarProvider>
-            <div className="flex min-h-screen bg-background">
-              <Sidebar>
-                <AdminSidebar 
-                  activeSection={activeSection} 
-                  handleNavigateToSection={handleNavigateToSection} 
-                  adminInfo={adminInfo} 
-                  handleLogout={handleLogout} 
-                />
-              </Sidebar>
-              <SidebarInset>
-                <AdminContent 
-                  key={activeSection}
-                  activeSection={activeSection} 
-                />
-              </SidebarInset>
-            </div>
-          </SidebarProvider>
+          <AdminContent 
+            key={activeSection}
+            activeSection={activeSection} 
+          />
         </ProjectsProvider>
       </HomeModelsProvider>
     </AdminThemeProvider>
