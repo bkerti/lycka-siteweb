@@ -12,8 +12,6 @@ import { BarChart, Folder, Home, Image, LogOut, MessageSquare, Sparkles, Video }
 import { Button } from "@/components/ui/button";
 import { AdminSession } from "@/models/AdminSession";
 import { AdminModeToggle } from "./AdminModeToggle";
-import logoPng from '/sc/log.png';
-import logoWebp from '/sc/log.png?format=webp';
 
 interface AdminSidebarProps {
   activeSection: string;
@@ -33,15 +31,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       <SidebarHeader>
         <div className="px-3 py-2">
           <div className="flex items-center gap-2">
-            <picture>
-              <source srcSet={logoWebp} type="image/webp" />
-              <source srcSet={logoPng} type="image/png" />
-              <img 
-                src={logoPng} 
-                alt="LYCKA Logo" 
-                className="h-8"
-              />
-            </picture>
+            <img 
+              src="/logo_header.png" // Use the new logo directly
+              alt="LYCKA Logo" 
+              className="h-8"
+            />
             <h2 className="text-xl font-bold font-heading bg-gradient-to-r from-blue-600 via-blue-500 to-green-500 bg-clip-text text-transparent dark:text-white">LYCKA Admin</h2>
           </div>
           <p className="text-xs text-gray-500 dark:text-gray-400">Gestion de contenu</p>
