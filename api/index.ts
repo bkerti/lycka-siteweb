@@ -309,6 +309,49 @@ app.delete('/api/homemodels/:id', authenticateToken, authorizeRoles(['admin', 's
     res.status(204).send();
 });
 
+// --- Gallery Items ---
+app.get('/api/gallery-items', async (req, res) => {
+    try {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+
+        // Fetch in parallel
+        const [projects, homeModels] = await Promise.all([
+            projectService.getAllProjects(),
+            homeModelService.getAllHomeModels()
+        ]);
+
+        // Standardize and combine
+        const projectMedia = projects.flatMap(project =>
+            (project.media || []).map(mediaItem => ({
+                ...mediaItem,
+                id: `${project.id}-${mediaItem.id}`, // Create a more unique ID
+                title: project.title,
+                section: 'projects', // Use 'projects' to match filter
+                category: project.category,
+                sourceId: project.id
+            }))
+        );
+
+        const homeModelMedia = homeModels.flatMap(homeModel =>
+            (homeModel.media || []).map(mediaItem => ({
+                ...mediaItem,
+                id: `${homeModel.id}-${mediaItem.id}`, // Create a more unique ID
+                title: homeModel.name,
+                section: 'lycka-home', // Use 'lycka-home' to match filter
+                category: homeModel.category,
+                sourceId: homeModel.id
+            }))
+        );
+
+        const combinedMedia = [...projectMedia, ...homeModelMedia];
+        
+        res.json(combinedMedia);
+    } catch (error) {
+        console.error('Failed to fetch gallery items:', error);
+        res.status(500).json({ error: 'Failed to fetch gallery items' });
+    }
+});
+
 
 // --- Testimonials ---
 app.get('/api/testimonials', async (req, res) => res.json(await testimonialService.getAllTestimonials()));
