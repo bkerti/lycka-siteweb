@@ -402,6 +402,40 @@ app.post('/api/visits', async (req, res) => {
     }
 });
 
+app.get('/api/analytics/visits-summary', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
+    const range = req.query.range as string || 'daily'; // default to daily
+
+    let dateTruncUnit: string;
+
+    switch (range) {
+        case 'weekly':
+            dateTruncUnit = 'week';
+            break;
+        case 'monthly':
+            dateTruncUnit = 'month';
+            break;
+        case 'daily':
+        default:
+            dateTruncUnit = 'day';
+            break;
+    }
+
+    try {
+        const { rows } = await sql`
+            SELECT 
+                DATE_TRUNC(${dateTruncUnit}, visit_timestamp) as period,
+                COUNT(id) as count
+            FROM visits
+            GROUP BY period
+            ORDER BY period ASC;
+        `;
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching visit summary:', err);
+        res.status(500).json({ error: 'Failed to fetch visit summary' });
+    }
+});
+
 
 // Export the app as a serverless function
 export default app;

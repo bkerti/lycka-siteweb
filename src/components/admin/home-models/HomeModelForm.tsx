@@ -79,7 +79,7 @@ const HomeModelForm = ({
       return null;
     }
 
-    const endpoint = `/api/upload?filename=${file.name}`;
+    const endpoint = `/api/upload?filename=${encodeURIComponent(file.name)}`;
 
     try {
       const response = await fetch(endpoint, {

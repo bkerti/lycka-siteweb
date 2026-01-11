@@ -86,7 +86,7 @@ export const useServices = () => {
         const uploadHeaders = getAuthHeaders('');
         if(!uploadHeaders) return false;
         
-        const uploadResponse = await fetch(`${API_URL}/upload`, {
+        const uploadResponse = await fetch(`${API_URL}/upload?filename=${encodeURIComponent(file.name)}`, {
           method: 'POST',
           headers: { 'Authorization': uploadHeaders.Authorization },
           body: formData,
