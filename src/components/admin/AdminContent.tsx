@@ -16,43 +16,8 @@ interface AdminContentProps {
 }
 
 const AdminContent: React.FC<AdminContentProps> = ({ activeSection }) => {
-  if (activeSection === 'services') {
-    return <AdminServices />;
-  }
-
-  if (activeSection === 'projects') {
-    return <AdminProjects />;
-  }
-
-  if (activeSection === 'lycka-home') {
-    return <AdminLyckaHome />;
-  }
-
-  if (activeSection === 'lycka-home-comments') {
-    return <AdminLyckaHomeComments />;
-  }
-
-  if (activeSection === 'media-interactions') {
-    return <AdminMediaInteractions />;
-  }
-
-  if (activeSection === 'testimonials') {
-    return <AdminTestimonials />;
-  }
-
-  if (activeSection === 'lycka-blog') {
-    return <AdminLyckaBlog />;
-  }
-
-  if (activeSection === 'blog-comments') {
-    return <AdminBlogComments />;
-  }
-
-  if (activeSection === 'statistics') {
-    return <VisitorChart />;
-  }
-
-  return <AdminOverview />;
+  // Always return AdminProjects for debugging
+  return <AdminProjects />;
 };
 
 export default AdminContent;
