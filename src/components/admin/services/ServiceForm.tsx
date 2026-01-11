@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Service, ServiceFormData } from "@/models/Service";
 import { useState, useEffect } from "react";
+import { Upload } from "lucide-react"; // Import Upload icon
 
 // Define a type for the form data where features is a string
 type ServiceFormShape = Omit<ServiceFormData, 'features'> & {
@@ -15,7 +16,7 @@ type ServiceFormShape = Omit<ServiceFormData, 'features'> & {
 
 interface ServiceFormProps {
   editingService: Service | null;
-  onSubmit: (data: ServiceFormData, file?: File) => Promise<boolean>;
+  onSubmit: (data: ServiceFormData) => Promise<boolean>; // file param removed
   onCancel: () => void;
 }
 
@@ -37,20 +38,22 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  // Set initial form values and image preview when editingService changes
   useEffect(() => {
     if (editingService) {
       form.reset({
         ...editingService,
-        features: editingService.features.join('\n'),
+        features: editingService.features ? editingService.features.join('\n') : '',
       });
       setImagePreview(editingService.imageUrl);
     } else {
       form.reset({ title: "", description: "", imageUrl: "", icon: "", features: "" });
       setImagePreview(null);
     }
+    setSelectedFile(null); // Clear selected file when form is reset or editingService changes
   }, [editingService, form]);
 
-  // Cleanup for image preview URL
+  // Cleanup for image preview URL (for createObjectURL)
   useEffect(() => {
     return () => {
       if (imagePreview && imagePreview.startsWith("blob:")) {
@@ -63,13 +66,61 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       setSelectedFile(file);
+      // Revoke old URL if it was a blob URL
       if (imagePreview && imagePreview.startsWith("blob:")) {
         URL.revokeObjectURL(imagePreview);
       }
       setImagePreview(URL.createObjectURL(file));
     } else {
       setSelectedFile(null);
-      setImagePreview(null);
+      // If no file selected, and we are not in editing mode, clear preview
+      if (!editingService) {
+        setImagePreview(null);
+      }
+    }
+  };
+
+  const uploadFile = async (file: File) => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      toast.error("Authentification requise pour l'upload.");
+      return null;
+    }
+    
+    const endpoint = `/api/upload?filename=${encodeURIComponent(file.name)}`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: file,
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.url; // Vercel Blob returns the URL in the 'url' property
+    } catch (error) {
+      console.error(`Error uploading file:`, error);
+      toast.error(`Échec du téléchargement du fichier.`);
+      return null;
+    }
+  };
+
+  const handleAddImage = async () => {
+    if (!selectedFile) {
+      toast.error("Veuillez sélectionner un fichier à télécharger.");
+      return;
+    }
+
+    const uploadedUrl = await uploadFile(selectedFile);
+    if (uploadedUrl) {
+      form.setValue("imageUrl", uploadedUrl);
+      setSelectedFile(null); // Clear selected file from input
+      setImagePreview(uploadedUrl); // Update preview to the permanent URL
+      toast.success("Image ajoutée avec succès !");
     }
   };
 
@@ -80,7 +131,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       features: featuresArray,
     };
     
-    const success = await onSubmit(processedData, selectedFile || undefined);
+    // Pass processedData directly, imageUrl should already be set by handleAddImage or editingService
+    const success = await onSubmit(processedData); 
 
     if (success && !editingService) {
       form.reset();
@@ -143,31 +195,37 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="imageUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image</FormLabel>
-              <div className="flex gap-2 items-center">
-                <FormControl>
-                  <Input 
+        {/* Image Upload Field with Add button */}
+        <div className="space-y-2">
+            <FormLabel>Image du service</FormLabel>
+            <div className="flex flex-col gap-2">
+                <Input 
                     type="file" 
                     accept="image/*" 
-                    onChange={(e) => {
-                      handleFileChange(e);
-                      field.onChange(e); // Keep react-hook-form updated
-                    }}
-                  />
-                </FormControl>
+                    onChange={handleFileChange}
+                    className="flex-1"
+                />
                 {imagePreview && (
-                  <img src={imagePreview} alt="Preview" className="w-20 h-20 object-cover rounded-md" />
+                    <div className="flex items-center gap-2">
+                        <img src={imagePreview} alt="Aperçu" className="w-20 h-20 object-cover rounded-md" />
+                        <Button type="button" onClick={handleAddImage} disabled={!selectedFile}>
+                            <Upload className="mr-2" size={16} /> Ajouter l'image
+                        </Button>
+                    </div>
                 )}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormField
+                    control={form.control}
+                    name="imageUrl"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl>
+                                <Input type="hidden" {...field} /> {/* Hidden field to store the URL */}
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+            </div>
+        </div>
 
         <FormField
           control={form.control}
