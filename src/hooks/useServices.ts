@@ -114,6 +114,7 @@ export const useServices = () => {
       }
 
       const updatedService: Service = await response.json();
+      console.log("Updated service received from API:", updatedService);
       
       if (editingService) {
         setServices(services.map(s => s.id === updatedService.id ? updatedService : s));
