@@ -212,9 +212,34 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
                     {imagePreview && (
                         <div className="flex items-center gap-2">
                             <img src={imagePreview} alt="Aperçu" className="w-20 h-20 object-cover rounded-md" />
-                            <Button type="button" onClick={handleAddImage} disabled={!selectedFile}>
-                                <Upload className="mr-2" size={16} /> Ajouter l'image
-                            </Button>
+                            {selectedFile ? ( // If a new file is selected, show Add/Cancel for new file
+                                <>
+                                    <Button type="button" onClick={handleAddImage} disabled={!selectedFile}>
+                                        <Upload className="mr-2" size={16} /> Ajouter l'image
+                                    </Button>
+                                    <Button type="button" variant="outline" size="sm" onClick={() => {
+                                        setSelectedFile(null);
+                                        if (imagePreview && imagePreview.startsWith("blob:")) {
+                                            URL.revokeObjectURL(imagePreview);
+                                        }
+                                        setImagePreview(editingService?.imageUrl || null); // Revert to existing image or null
+                                        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+                                        if (fileInput) fileInput.value = '';
+                                    }}>
+                                        Annuler
+                                    </Button>
+                                </>
+                            ) : ( // No new file selected, show remove for existing image if any
+                                editingService?.imageUrl && ( // Only show if there's an existing image
+                                    <Button type="button" variant="destructive" size="sm" onClick={() => {
+                                        form.setValue("imageUrl", "");
+                                        setImagePreview(null);
+                                        toast.info("Image du service supprimée.");
+                                    }}>
+                                        <Trash2 className="mr-2" size={16} /> Supprimer
+                                    </Button>
+                                )
+                            )}
                         </div>
                     )}
                     <Input type="hidden" {...field} />
