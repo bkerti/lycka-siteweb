@@ -73,11 +73,20 @@ const HomeModelForm = ({
   };
 
   const uploadFile = async (file: File) => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      toast.error("Authentification requise pour l'upload.");
+      return null;
+    }
+
     const endpoint = `/api/upload?filename=${file.name}`;
 
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
         body: file,
       });
       if (!response.ok) {
