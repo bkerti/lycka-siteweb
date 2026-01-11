@@ -35,7 +35,7 @@ const AboutSection = () => {
               />
             </div>
             <div 
-              className="rounded-lg overflow-hidden mt-8"
+              className="rounded-lg overflow-hidden"
               onMouseEnter={() => setHoveredImage(1)}
               onMouseLeave={() => setHoveredImage(null)}
             >
@@ -46,7 +46,7 @@ const AboutSection = () => {
               />
             </div>
             <div 
-              className="rounded-lg overflow-hidden -mt-8"
+              className="rounded-lg overflow-hidden"
               onMouseEnter={() => setHoveredImage(2)}
               onMouseLeave={() => setHoveredImage(null)}
             >
