@@ -84,7 +84,7 @@ const AdminServices = () => {
         </div>
       </div>
 
-      <ConfirmationDialog
+      {/* <ConfirmationDialog
         isOpen={dialogState.isOpen}
         onClose={cancelAction}
         onConfirm={confirmAction}
@@ -99,7 +99,7 @@ const AdminServices = () => {
               : "Confirmer l'ajout de ce nouveau service ?")
         }
         confirmText={dialogState.action === 'delete' ? "Supprimer" : "Confirmer"}
-      />
+      /> */}
     </div>
   );
 };

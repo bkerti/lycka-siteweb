@@ -16,7 +16,7 @@ interface AdminContentProps {
 
 const AdminContent: React.FC<AdminContentProps> = ({ activeSection }) => {
   if (activeSection === 'services') {
-    return null;
+    return <AdminServices />;
   }
 
   if (activeSection === 'projects') {
