@@ -197,7 +197,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 
         {/* Image Upload Field with Add button */}
         <div className="space-y-2">
-            <FormLabel>Image du service</FormLabel>
+            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Image du service</label>
             <div className="flex flex-col gap-2">
                 <Input 
                     type="file" 
