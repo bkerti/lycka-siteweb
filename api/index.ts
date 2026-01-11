@@ -22,6 +22,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:8080', // Vite dev server
   'http://localhost:5173', // Fallback/other dev server
+  'https://lycka-siteweb.vercel.app', // Production frontend
 ];
 
 if (process.env.VERCEL_URL) {
@@ -40,7 +41,6 @@ const corsOptions: cors.CorsOptions = {
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.error('CORS Error: Origin not allowed:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
