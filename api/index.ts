@@ -276,7 +276,10 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
 
 
 // --- Projects ---
-app.get('/api/projects', async (req, res) => res.json(await projectService.getAllProjects()));
+app.get('/api/projects', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.json(await projectService.getAllProjects());
+});
 app.post('/api/projects', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.status(201).json(await projectService.createProject(req.body)));
 app.put('/api/projects/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await projectService.updateProject(req.params.id as string, req.body)));
 app.delete('/api/projects/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
@@ -295,7 +298,10 @@ app.delete('/api/services/:id', authenticateToken, authorizeRoles(['admin', 'sup
 
 
 // --- Home Models ---
-app.get('/api/homemodels', async (req, res) => res.json(await homeModelService.getAllHomeModels()));
+app.get('/api/homemodels', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.json(await homeModelService.getAllHomeModels());
+});
 app.post('/api/homemodels', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.status(201).json(await homeModelService.createHomeModel(req.body)));
 app.put('/api/homemodels/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => res.json(await homeModelService.updateHomeModel(req.params.id as string, req.body)));
 app.delete('/api/homemodels/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
