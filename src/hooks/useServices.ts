@@ -76,27 +76,12 @@ export const useServices = () => {
     }
   };
 
-  const handleSubmit = async (data: ServiceFormData, file?: File): Promise<boolean> => {
+  const handleSubmit = async (data: ServiceFormData): Promise<boolean> => {
     try {
-      let imageUrl = data.imageUrl;
-      if (file) {
-        const formData = new FormData();
-        formData.append('image', file);
-        
-        const uploadHeaders = getAuthHeaders('');
-        if(!uploadHeaders) return false;
-        
-        const uploadResponse = await fetch(`${API_URL}/upload?filename=${encodeURIComponent(file.name)}`, {
-          method: 'POST',
-          headers: { 'Authorization': uploadHeaders.Authorization },
-          body: formData,
-        });
-        if (!uploadResponse.ok) throw new Error('Failed to upload image');
-        const uploadData = await uploadResponse.json();
-        imageUrl = uploadData.url;
-      }
+      // The imageUrl is now expected to be already set in data from the form
+      // No file upload logic needed here anymore
 
-      const serviceData = { ...data, imageUrl };
+      const serviceData = { ...data }; // data should already contain the final imageUrl
       
       const headers = getAuthHeaders();
       if (!headers) return false;
