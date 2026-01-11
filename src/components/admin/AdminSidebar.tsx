@@ -49,10 +49,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "overview"}
               tooltip="Tableau de bord"
             >
-              <>
+              <div className="flex items-center">
                 <Home className="mr-2" size={18} />
                 <span>Tableau de bord</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -61,10 +61,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "statistics"}
               tooltip="Statistiques"
             >
-              <>
+              <div className="flex items-center">
                 <BarChart className="mr-2" size={18} />
                 <span>Statistiques</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -73,10 +73,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "services"}
               tooltip="Services"
             >
-              <>
+              <div className="flex items-center">
                 <Folder className="mr-2" size={18} />
                 <span>Services</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -85,10 +85,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "projects"}
               tooltip="Projets"
             >
-              <>
+              <div className="flex items-center">
                 <Image className="mr-2" size={18} />
                 <span>Projets</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -97,10 +97,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "lycka-home"}
               tooltip="LYCKA Home"
             >
-              <>
+              <div className="flex items-center">
                 <Home className="mr-2" size={18} />
                 <span>LYCKA Home</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -109,10 +109,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "lycka-home-comments"}
               tooltip="Avis Lycka Home"
             >
-              <>
+              <div className="flex items-center">
                 <MessageSquare className="mr-2" size={18} />
                 <span>Avis Lycka Home</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -121,10 +121,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "media-interactions"}
               tooltip="Commentaires & Interactions Galerie"
             >
-              <>
+              <div className="flex items-center">
                 <MessageSquare className="mr-2" size={18} />
                 <span>Commentaires & Interactions Galerie</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -133,10 +133,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "testimonials"}
               tooltip="Témoignages"
             >
-              <>
+              <div className="flex items-center">
                 <MessageSquare className="mr-2" size={18} />
                 <span>Témoignages</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -145,10 +145,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "lycka-blog"}
               tooltip="Lycka Blog"
             >
-              <>
+              <div className="flex items-center">
                 <Sparkles className="mr-2" size={18} />
                 <span>Lycka Blog</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
@@ -157,10 +157,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               isActive={activeSection === "blog-comments"}
               tooltip="Gestion des commentaires"
             >
-              <>
+              <div className="flex items-center">
                 <MessageSquare className="mr-2" size={18} />
                 <span>Commentaires du Blog</span>
-              </>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
