@@ -247,6 +247,7 @@ app.post('/api/upload', authenticateToken, authorizeRoles(['admin', 'super_admin
             token: process.env.BLOB_READ_WRITE_TOKEN,
             addRandomSuffix: true, // Add this option
         });
+        console.log("Vercel Blob put result:", blob); // Add this line
         return res.status(200).json(blob);
     } catch (error) {
         console.error('Upload error:', error);
