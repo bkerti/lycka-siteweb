@@ -306,7 +306,7 @@ app.delete('/api/homemodels/:id', authenticateToken, authorizeRoles(['admin', 's
 // --- Testimonials ---
 app.get('/api/testimonials', async (req, res) => res.json(await testimonialService.getAllTestimonials()));
 app.post('/api/testimonials', async (req, res) => {
-    if (R.body.subject) return res.status(200).send(); // Honeypot
+    if (req.body.subject) return res.status(200).send(); // Honeypot
     res.status(201).json(await testimonialService.createTestimonial(req.body));
 });
 app.delete('/api/testimonials/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
