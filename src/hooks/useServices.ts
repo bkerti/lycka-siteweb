@@ -93,7 +93,7 @@ export const useServices = () => {
         });
         if (!uploadResponse.ok) throw new Error('Failed to upload image');
         const uploadData = await uploadResponse.json();
-        imageUrl = uploadData.imageUrl;
+        imageUrl = uploadData.url;
       }
 
       const serviceData = { ...data, imageUrl };
