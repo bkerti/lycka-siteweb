@@ -200,53 +200,55 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Image du service</FormLabel>
-              <FormControl>
-                <div className="space-y-2">
-                  <div className="flex flex-col gap-2">
-                    <Input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleFileChange}
-                        className="flex-1"
-                    />
-                    {imagePreview && (
-                        <div className="flex items-center gap-2">
-                            <img src={imagePreview} alt="Aperçu" className="w-20 h-20 object-cover rounded-md" />
-                            {selectedFile ? ( // If a new file is selected, show Add/Cancel for new file
-                                <>
-                                    <Button type="button" onClick={handleAddImage} disabled={!selectedFile}>
-                                        <Upload className="mr-2" size={16} /> Ajouter l'image
-                                    </Button>
-                                    <Button type="button" variant="outline" size="sm" onClick={() => {
-                                        setSelectedFile(null);
-                                        if (imagePreview && imagePreview.startsWith("blob:")) {
-                                            URL.revokeObjectURL(imagePreview);
-                                        }
-                                        setImagePreview(editingService?.imageUrl || null); // Revert to existing image or null
-                                        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-                                        if (fileInput) fileInput.value = '';
-                                    }}>
-                                        Annuler
-                                    </Button>
-                                </>
-                            ) : ( // No new file selected, show remove for existing image if any
-                                editingService?.imageUrl && ( // Only show if there's an existing image
-                                    <Button type="button" variant="destructive" size="sm" onClick={() => {
-                                        form.setValue("imageUrl", "");
-                                        setImagePreview(null);
-                                        toast.info("Image du service supprimée.");
-                                    }}>
-                                        <Trash2 className="mr-2" size={16} /> Supprimer
-                                    </Button>
-                                )
-                            )}
-                        </div>
-                    )}
-                    <Input type="hidden" {...field} />
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage />
+                            <FormControl>
+                              <div className="space-y-2"> {/* This is the single child of FormControl */}
+                                {/* Always visible file input */}
+                                <Input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    onChange={handleFileChange}
+                                    className="flex-1"
+                                />
+                                
+                                {/* Conditional rendering for image preview and buttons */}
+                                {imagePreview && (
+                                    <div className="flex items-center gap-2">
+                                        <img src={imagePreview} alt="Aperçu" className="w-20 h-20 object-cover rounded-md" />
+                                        
+                                        {selectedFile ? ( // If a new file is selected, show Add/Cancel for new file
+                                            <>
+                                                <Button type="button" onClick={handleAddImage} disabled={!selectedFile}>
+                                                    <Upload className="mr-2" size={16} /> Ajouter l'image
+                                                </Button>
+                                                <Button type="button" variant="outline" size="sm" onClick={() => {
+                                                    setSelectedFile(null);
+                                                    if (imagePreview && imagePreview.startsWith("blob:")) {
+                                                        URL.revokeObjectURL(imagePreview);
+                                                    }
+                                                    setImagePreview(editingService?.imageUrl || null); // Revert to existing image or null
+                                                    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+                                                    if (fileInput) fileInput.value = '';
+                                                }}>
+                                                    Annuler
+                                                </Button>
+                                            </>
+                                        ) : ( // No new file selected, show remove for existing image if any
+                                            editingService?.imageUrl && ( // Only show if there's an existing image
+                                                <Button type="button" variant="destructive" size="sm" onClick={() => {
+                                                    form.setValue("imageUrl", "");
+                                                    setImagePreview(null);
+                                                    toast.info("Image du service supprimée.");
+                                                }}>
+                                                    <Trash2 className="mr-2" size={16} /> Supprimer
+                                                </Button>
+                                            )
+                                        )}
+                                    </div>
+                                )}
+                                {/* Hidden input to store the URL (always rendered) */}
+                                <Input type="hidden" {...field} /> 
+                              </div>
+                            </FormControl>              <FormMessage />
             </FormItem>
           )}
         />
