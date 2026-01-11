@@ -2,7 +2,7 @@ import { sql } from '../db.js';
 import { Service } from '../types.js';
 
 export const getAllServices = async (): Promise<Service[]> => {
-  const { rows } = await sql<Service>`SELECT * FROM services ORDER BY title ASC`;
+  const { rows } = await sql<Service>`SELECT * FROM services ORDER BY created_at ASC`;
   return rows;
 };
 

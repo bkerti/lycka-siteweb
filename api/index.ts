@@ -129,7 +129,8 @@ app.get('/api', (req, res) => {
             description TEXT,
             icon VARCHAR(100),
             imageUrl VARCHAR(255),
-            features JSONB
+            features JSONB,
+            created_at TIMESTAMPTZ DEFAULT NOW()
         );
       `;
       await client.sql`
