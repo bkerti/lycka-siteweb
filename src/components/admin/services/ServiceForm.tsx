@@ -4,6 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Service, ServiceFormData } from "@/models/Service";
 import { useState, useEffect } from "react";
 
@@ -14,7 +15,7 @@ type ServiceFormShape = Omit<ServiceFormData, 'features'> & {
 
 interface ServiceFormProps {
   editingService: Service | null;
-  onSubmit: (data: ServiceFormData, file?: File) => void;
+  onSubmit: (data: ServiceFormData, file?: File) => Promise<boolean>;
   onCancel: () => void;
 }
 
@@ -49,10 +50,22 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
     }
   }, [editingService, form]);
 
+  // Cleanup for image preview URL
+  useEffect(() => {
+    return () => {
+      if (imagePreview && imagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       setSelectedFile(file);
+      if (imagePreview && imagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
+      }
       setImagePreview(URL.createObjectURL(file));
     } else {
       setSelectedFile(null);
@@ -60,13 +73,21 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
     }
   };
 
-  const handleSubmit = (data: ServiceFormShape) => {
+  const handleSubmit = async (data: ServiceFormShape) => {
     const featuresArray = data.features.split('\n').map(f => f.trim()).filter(f => f);
     const processedData: ServiceFormData = {
       ...data,
       features: featuresArray,
     };
-    onSubmit(processedData, selectedFile || undefined);
+    
+    const success = await onSubmit(processedData, selectedFile || undefined);
+
+    if (success && !editingService) {
+      form.reset();
+      setSelectedFile(null);
+      setImagePreview(null);
+      toast.info("Formulaire vidé pour la prochaine saisie.");
+    }
   };
 
   return (

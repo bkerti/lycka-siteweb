@@ -76,7 +76,7 @@ export const useServices = () => {
     }
   };
 
-  const handleSubmit = async (data: ServiceFormData, file?: File) => {
+  const handleSubmit = async (data: ServiceFormData, file?: File): Promise<boolean> => {
     try {
       let imageUrl = data.imageUrl;
       if (file) {
@@ -84,7 +84,7 @@ export const useServices = () => {
         formData.append('image', file);
         
         const uploadHeaders = getAuthHeaders('');
-        if(!uploadHeaders) return;
+        if(!uploadHeaders) return false;
         
         const uploadResponse = await fetch(`${API_URL}/upload`, {
           method: 'POST',
@@ -99,7 +99,7 @@ export const useServices = () => {
       const serviceData = { ...data, imageUrl };
       
       const headers = getAuthHeaders();
-      if (!headers) return;
+      if (!headers) return false;
 
       let response: Response;
       if (editingService) {
@@ -125,7 +125,7 @@ export const useServices = () => {
         } else {
             throw new Error(errorMessage);
         }
-        return; // Stop execution after handling the error
+        return false; // Stop execution and indicate failure
       }
 
       const updatedService: Service = await response.json();
@@ -138,10 +138,12 @@ export const useServices = () => {
         toast({ title: "Service ajouté", description: "Le service a été ajouté avec succès" });
       }
       setEditingService(null);
+      return true; // Indicate success
 
     } catch (error) {
       console.error("Error submitting service:", error);
       toast({ title: "Erreur", description: "Erreur lors de la soumission du service.", variant: "destructive" });
+      return false; // Indicate failure
     }
   };
 

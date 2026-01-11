@@ -12,7 +12,7 @@ import { toast } from "sonner";
 interface HomeModelFormProps {
   editingModel: HomeModel | null;
   currentMedia: { url: string; type: string }[];
-  onSubmit: (data: Partial<HomeModel>) => void;
+  onSubmit: (data: Partial<HomeModel>) => Promise<boolean>;
   onReset: () => void;
   onAddMedia: (mediaItem: { url: string; type: string }) => void;
   onRemoveMedia: (index: number) => void;
@@ -124,8 +124,13 @@ const HomeModelForm = ({
   };
 
 
-  const handleSubmit = (data: Partial<HomeModel>) => {
-    onSubmit(data);
+  const handleSubmit = async (data: Partial<HomeModel>) => {
+    const success = await onSubmit(data);
+    if (success && !editingModel) {
+      form.reset();
+      onReset(); // This should clear the media state in the parent
+      toast.info("Formulaire vidé pour la prochaine saisie.");
+    }
   };
 
   return (

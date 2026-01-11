@@ -115,19 +115,23 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
   const handleFormSubmit = async (data: { title: string; status: string; category: string; description: string; mediaUrl: string; }) => {
     const { mediaUrl, ...projectData } = data;
-    const success = await onSubmit(projectData, currentMedia);
-    if (success && !editingProject) {
-      form.reset({
-        title: "",
-        status: "conceptions",
-        category: "",
-        description: "",
-        mediaUrl: "",
-      });
-      setCurrentMedia([]);
-      imagePreviews.forEach(preview => URL.revokeObjectURL(preview));
-      setSelectedImageFiles([]);
-      setImagePreviews([]);
+    const submissionSuccessful = await onSubmit(projectData, currentMedia);
+
+    if (submissionSuccessful) {
+      if (!editingProject) {
+        form.reset({
+          title: "",
+          status: "conceptions",
+          category: "",
+          description: "",
+          mediaUrl: "",
+        });
+        setCurrentMedia([]);
+        imagePreviews.forEach(preview => URL.revokeObjectURL(preview));
+        setSelectedImageFiles([]);
+        setImagePreviews([]);
+        toast.info("Formulaire vidé pour la prochaine saisie.");
+      }
     }
   };
 

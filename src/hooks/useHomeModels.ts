@@ -69,9 +69,9 @@ export function useHomeModels() {
     }
   };
 
-  const handleSubmit = async (data: Partial<HomeModel>) => {
+  const handleSubmit = async (data: Partial<HomeModel>): Promise<boolean> => {
     const headers = getAuthHeaders();
-    if (!headers) return;
+    if (!headers) return false;
 
     const modelData = { ...data, media: currentMedia };
 
@@ -97,10 +97,11 @@ export function useHomeModels() {
         setHomeModels([...homeModels, resultModel]);
         toast({ title: "Modèle ajouté", description: "Le modèle a été ajouté avec succès" });
       }
+      return true;
     } catch (error) {
       console.error("Error submitting home model:", error);
       toast({ title: "Erreur", description: "Erreur lors de la soumission du modèle.", variant: "destructive" });
-      throw error; // Re-throw the error to be caught by the caller
+      return false;
     }
   };
 
