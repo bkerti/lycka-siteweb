@@ -72,36 +72,31 @@ const HomeModelForm = ({
     }
   };
 
-  
-
-  const uploadFile = async (file: File, type: 'image') => {
-    const formData = new FormData();
-    formData.append(type, file);
-    const endpoint = '/api/upload';
+  const uploadFile = async (file: File) => {
+    const endpoint = `/api/upload?filename=${file.name}`;
 
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        body: formData,
+        body: file,
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      return data.imageUrl;
+      return data.url; // Vercel Blob returns the URL in the 'url' property
     } catch (error) {
-      console.error(`Error uploading ${type}:`, error);
-      toast.error(`Échec du téléchargement de l'image.`);
+      console.error(`Error uploading file:`, error);
+      toast.error(`Échec du téléchargement du fichier.`);
       return null;
     }
   };
 
   const handleAddMedia = async () => {
     const mediaUrl = form.getValues("mediaUrl");
-    let uploadedUrls: { url: string; type: string }[] = [];
 
     if (selectedImageFiles.length > 0) {
-      const uploadPromises = selectedImageFiles.map(file => uploadFile(file, 'image'));
+      const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
       const urls = await Promise.all(uploadPromises);
       urls.forEach(url => {
         if (url) {
@@ -114,16 +109,14 @@ const HomeModelForm = ({
 
     form.setValue("mediaUrl", "");
     setSelectedImageFiles([]);
+    imagePreviews.forEach(p => URL.revokeObjectURL(p));
     setImagePreviews([]);
     toast.success(`${selectedImageFiles.length || (mediaUrl ? 1 : 0)} média(s) ajouté(s) à la galerie`);
   };
 
 
   const handleSubmit = (data: Partial<HomeModel>) => {
-    onSubmit(data).then(() => {
-      onReset();
-      form.reset();
-    });
+    onSubmit(data);
   };
 
   return (

@@ -55,24 +55,22 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     }
   };
 
-  const uploadFile = async (file: File, type: 'image') => {
-    const formData = new FormData();
-    formData.append(type, file);
-    const endpoint = '/api/upload';
+  const uploadFile = async (file: File) => {
+    const endpoint = `/api/upload?filename=${file.name}`;
 
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        body: formData,
+        body: file,
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      return data.imageUrl;
+      return data.url; // Vercel Blob returns the URL in the 'url' property
     } catch (error) {
-      console.error(`Error uploading ${type}:`, error);
-      toast.error(`Échec du téléchargement de l'image.`);
+      console.error(`Error uploading file:`, error);
+      toast.error(`Échec du téléchargement du fichier.`);
       return null;
     }
   };
@@ -82,7 +80,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     let uploadedUrls: { url: string; type: string }[] = [];
 
     if (selectedImageFiles.length > 0) {
-      const uploadPromises = selectedImageFiles.map(file => uploadFile(file, 'image'));
+      const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
       const urls = await Promise.all(uploadPromises);
       urls.forEach(url => {
         if (url) {

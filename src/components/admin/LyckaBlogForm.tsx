@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
+import { Trash2 } from 'lucide-react';
 
 const LyckaBlogForm = ({ item, onSave, onCancel }) => {
   const [title, setTitle] = useState('');
@@ -39,24 +41,22 @@ const LyckaBlogForm = ({ item, onSave, onCancel }) => {
     }
   };
 
-  const uploadFile = async (file: File, type: 'image') => {
-    const formData = new FormData();
-    formData.append(type, file);
-    const endpoint = '/api/upload';
+  const uploadFile = async (file: File) => {
+    const endpoint = `/api/upload?filename=${file.name}`;
 
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        body: formData,
+        body: file,
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      return data.imageUrl;
+      return data.url; // Vercel Blob returns 'url'
     } catch (error) {
-      console.error(`Error uploading ${type}:`, error);
-      toast.error(`Échec du téléchargement de l'image.`);
+      console.error(`Error uploading file:`, error);
+      toast.error(`Échec du téléchargement du fichier.`);
       return null;
     }
   };
@@ -65,7 +65,7 @@ const LyckaBlogForm = ({ item, onSave, onCancel }) => {
     let uploadedUrls: { url: string; type: string }[] = [];
 
     if (selectedImageFiles.length > 0) {
-      const uploadPromises = selectedImageFiles.map(file => uploadFile(file, 'image'));
+      const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
       const urls = await Promise.all(uploadPromises);
       urls.forEach(url => {
         if (url) {
@@ -77,6 +77,7 @@ const LyckaBlogForm = ({ item, onSave, onCancel }) => {
     if (uploadedUrls.length > 0) {
       setMedia([...media, ...uploadedUrls]);
       setSelectedImageFiles([]);
+      imagePreviews.forEach(p => URL.revokeObjectURL(p));
       setImagePreviews([]);
       toast.success(`${uploadedUrls.length} média(s) ajouté(s) à la galerie`);
     }

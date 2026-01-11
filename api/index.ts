@@ -18,8 +18,35 @@ import type { User } from './lib/types.js';
 
 const app = express();
 
+// Set up a whitelist of allowed origins
+const allowedOrigins = [
+  'http://localhost:8080', // Vite dev server
+  'http://localhost:5173', // Fallback/other dev server
+];
+
+if (process.env.VERCEL_URL) {
+  allowedOrigins.push(`https://${process.env.VERCEL_URL}`);
+}
+if (process.env.CORS_ORIGIN) {
+    allowedOrigins.push(process.env.CORS_ORIGIN);
+}
+
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
 // Global Middlewares
-app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173' }));
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Auth Middleware
@@ -279,7 +306,7 @@ app.delete('/api/homemodels/:id', authenticateToken, authorizeRoles(['admin', 's
 // --- Testimonials ---
 app.get('/api/testimonials', async (req, res) => res.json(await testimonialService.getAllTestimonials()));
 app.post('/api/testimonials', async (req, res) => {
-    if (req.body.subject) return res.status(200).send(); // Honeypot
+    if (R.body.subject) return res.status(200).send(); // Honeypot
     res.status(201).json(await testimonialService.createTestimonial(req.body));
 });
 app.delete('/api/testimonials/:id', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
