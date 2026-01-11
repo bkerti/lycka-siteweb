@@ -47,7 +47,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
             <SidebarMenuButton 
               onClick={() => handleNavigateToSection("overview")}
               isActive={activeSection === "overview"}
-              tooltip="Tableau de bord"
             >
               <div className="flex items-center">
                 <Home className="mr-2" size={18} />
