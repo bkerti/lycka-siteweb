@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -197,7 +196,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 
         {/* Image Upload Field with Add button */}
         <div className="space-y-2">
-            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Image du service</label>
+            <FormLabel>Image du service</FormLabel>
             <div className="flex flex-col gap-2">
                 <Input 
                     type="file" 
