@@ -89,7 +89,7 @@ app.get('/api', (req, res) => {
 });
 
 // --- DEV ONLY ---
-// if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
   app.get('/api/dev/setup-database', async (req, res) => {
     const client = await db.connect();
     try {
@@ -206,7 +206,7 @@ app.get('/api', (req, res) => {
       // Seed users
       const usersToSeed = [
         { username: 'bkerti', role: 'super_admin', password: 'lycka3310' },
-        { username: 'jordan', role: 'admin', password: 'lycka3310' },
+        { username: 'jordan', role: 'admin', password: 'lycka310' },
         { username: 'franklin', role: 'admin', password: 'lycka3310' },
         { username: 'admin', role: 'admin', password: 'lycka3310' },
       ];
@@ -232,7 +232,7 @@ app.get('/api', (req, res) => {
       client.release();
     }
   });
-// }
+}
 
 
 // --- Upload ---
@@ -245,6 +245,7 @@ app.post('/api/upload', authenticateToken, authorizeRoles(['admin', 'super_admin
         const blob = await put(filename, req, {
             access: 'public',
             token: process.env.BLOB_READ_WRITE_TOKEN,
+            addRandomSuffix: true, // Add this option
         });
         return res.status(200).json(blob);
     } catch (error) {
