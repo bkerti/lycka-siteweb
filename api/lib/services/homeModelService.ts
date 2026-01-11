@@ -8,25 +8,23 @@ export const getAllHomeModels = async (): Promise<HomeModel[]> => {
 
 export const createHomeModel = async (homeModelData: Omit<HomeModel, 'id'>): Promise<HomeModel> => {
   const { name, price, sqm, description, media, category, floors, livingRooms } = homeModelData;
-  const { rows } = await sql(
-    `INSERT INTO home_models (name, price, sqm, description, media, category, floors, livingRooms) 
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
-     RETURNING *`,
-    [name, price, sqm, description, media, category, floors, livingRooms]
-  );
-  return rows[0] as HomeModel;
+  const { rows } = await sql<HomeModel>`
+    INSERT INTO home_models (name, price, sqm, description, media, category, floors, livingRooms) 
+    VALUES (${name}, ${price}, ${sqm}, ${description}, ${media as any}, ${category}, ${floors}, ${livingRooms}) 
+    RETURNING *
+  `;
+  return rows[0];
 };
 
 export const updateHomeModel = async (id: string, homeModelData: Partial<Omit<HomeModel, 'id'>>): Promise<HomeModel | null> => {
   const { name, price, sqm, description, media, category, floors, livingRooms } = homeModelData;
-  const { rows } = await sql(
-    `UPDATE home_models 
-     SET name = $1, price = $2, sqm = $3, description = $4, media = $5, category = $6, floors = $7, livingRooms = $8 
-     WHERE id = $9 
-     RETURNING *`,
-    [name, price, sqm, description, media, category, floors, livingRooms, id]
-  );
-  return rows[0] as HomeModel || null;
+  const { rows } = await sql<HomeModel>`
+    UPDATE home_models 
+    SET name = ${name}, price = ${price}, sqm = ${sqm}, description = ${description}, media = ${media as any}, category = ${category}, floors = ${floors}, livingRooms = ${livingRooms} 
+    WHERE id = ${id} 
+    RETURNING *
+  `;
+  return rows[0] || null;
 };
 
 export const deleteHomeModel = async (id: string): Promise<{ rowCount: number }> => {

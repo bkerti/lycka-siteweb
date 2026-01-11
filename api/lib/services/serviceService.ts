@@ -8,25 +8,23 @@ export const getAllServices = async (): Promise<Service[]> => {
 
 export const createService = async (serviceData: Omit<Service, 'id'>): Promise<Service> => {
   const { title, description, icon, imageUrl, features } = serviceData;
-  const { rows } = await sql(
-    `INSERT INTO services (title, description, icon, imageUrl, features) 
-     VALUES ($1, $2, $3, $4, $5) 
-     RETURNING *`,
-    [title, description, icon, imageUrl, features]
-  );
-  return rows[0] as Service;
+  const { rows } = await sql<Service>`
+    INSERT INTO services (title, description, icon, imageUrl, features) 
+    VALUES (${title}, ${description}, ${icon}, ${imageUrl}, ${features as any}) 
+    RETURNING *
+  `;
+  return rows[0];
 };
 
 export const updateService = async (id: string, serviceData: Partial<Omit<Service, 'id'>>): Promise<Service | null> => {
   const { title, description, icon, imageUrl, features } = serviceData;
-  const { rows } = await sql(
-    `UPDATE services 
-     SET title = $1, description = $2, icon = $3, imageUrl = $4, features = $5 
-     WHERE id = $6 
-     RETURNING *`,
-    [title, description, icon, imageUrl, features, id]
-  );
-  return rows[0] as Service || null;
+  const { rows } = await sql<Service>`
+    UPDATE services 
+    SET title = ${title}, description = ${description}, icon = ${icon}, imageUrl = ${imageUrl}, features = ${features as any} 
+    WHERE id = ${id} 
+    RETURNING *
+  `;
+  return rows[0] || null;
 };
 
 export const deleteService = async (id: string): Promise<{ rowCount: number }> => {
