@@ -29,7 +29,7 @@ const AboutSection = () => {
               onMouseLeave={() => setHoveredImage(null)}
             >
               <img
-                src="/sc/m.jpg"
+                src="/m.jpg"
                 alt="LYCKA team"
                 className={`w-full h-full object-cover transition-transform duration-500 ${hoveredImage === 0 ? 'scale-110' : ''}`}
               />
@@ -40,7 +40,7 @@ const AboutSection = () => {
               onMouseLeave={() => setHoveredImage(null)}
             >
               <img
-                src="/sc/m1.jpg"
+                src="/m1.jpg"
                 alt="LYCKA office"
                 className={`w-full h-full object-cover transition-transform duration-500 ${hoveredImage === 1 ? 'scale-110' : ''}`}
               />
@@ -51,7 +51,7 @@ const AboutSection = () => {
               onMouseLeave={() => setHoveredImage(null)}
             >
               <img
-                src="/sc/m2.jpg"
+                src="/m2.jpg"
                 alt="LYCKA project"
                 className={`w-full h-full object-cover transition-transform duration-500 ${hoveredImage === 2 ? 'scale-110' : ''}`}
               />
@@ -62,7 +62,7 @@ const AboutSection = () => {
               onMouseLeave={() => setHoveredImage(null)}
             >
               <img
-                src="/sc/m3.jpg"
+                src="/m3.jpg"
                 alt="LYCKA design"
                 className={`w-full h-full object-cover transition-transform duration-500 ${hoveredImage === 3 ? 'scale-110' : ''}`}
               />
