@@ -29,7 +29,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   handleLogout 
 }) => {
   return (
-    <>
+    <div> {/* Wrap in a single div */}
       <SidebarHeader>
         <div className="px-3 py-2">
           <div className="flex items-center gap-2">
@@ -190,6 +190,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <AdminModeToggle />
         </div>
       </SidebarFooter>
-    </>
+    </div> {/* Close the div */}
   );
 };
