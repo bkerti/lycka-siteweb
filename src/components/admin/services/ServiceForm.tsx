@@ -62,9 +62,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   }, [imagePreview]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (process.env.NODE_ENV !== 'production') {
-      console.log("handleFileChange triggered", event.target.files);
-    }
+    console.log("handleFileChange triggered", event.target.files);
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
       setSelectedFile(file);
@@ -73,18 +71,14 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
         URL.revokeObjectURL(imagePreview);
       }
       setImagePreview(URL.createObjectURL(file));
-      if (process.env.NODE_ENV !== 'production') {
-        console.log("Image preview set to:", URL.createObjectURL(file));
-      }
+      console.log("Image preview set to:", URL.createObjectURL(file));
     } else {
       setSelectedFile(null);
       // If no file selected, and we are not in editing mode, clear preview
       if (!editingService) {
         setImagePreview(null);
       }
-      if (process.env.NODE_ENV !== 'production') {
-        console.log("File selection cleared.");
-      }
+      console.log("File selection cleared.");
     }
   };
 
@@ -92,9 +86,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
     const token = localStorage.getItem('adminToken');
     if (!token) {
       toast.error("Authentification requise pour l'upload.");
-      if (process.env.NODE_ENV !== 'production') {
-        console.log("Authentication token not found.");
-      }
+      console.log("Authentication token not found.");
       return null;
     }
     
@@ -112,9 +104,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      if (process.env.NODE_ENV !== 'production') {
-        console.log("File uploaded, URL:", data.url);
-      }
+      console.log("File uploaded, URL:", data.url);
       return data.url; // Vercel Blob returns the URL in the 'url' property
     } catch (error) {
       console.error(`Error uploading file:`, error);
@@ -126,28 +116,20 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   const handleAddImage = async () => {
     if (!selectedFile) {
       toast.error("Veuillez sélectionner un fichier à télécharger.");
-      if (process.env.NODE_ENV !== 'production') {
-        console.log("No file selected for handleAddImage.");
-      }
+      console.log("No file selected for handleAddImage.");
       return;
     }
 
-    if (process.env.NODE_ENV !== 'production') {
-      console.log("Uploading selected file:", selectedFile);
-    }
+    console.log("Uploading selected file:", selectedFile);
     const uploadedUrl = await uploadFile(selectedFile);
     if (uploadedUrl) {
       form.setValue("imageUrl", uploadedUrl);
       setSelectedFile(null); // Clear selected file from input
       setImagePreview(uploadedUrl); // Update preview to the permanent URL
       toast.success("Image ajoutée avec succès !");
-      if (process.env.NODE_ENV !== 'production') {
-        console.log("imageUrl set in form:", uploadedUrl);
-      }
+      console.log("imageUrl set in form:", uploadedUrl);
     } else {
-      if (process.env.NODE_ENV !== 'production') {
-        console.log("File upload failed, imageUrl not set.");
-      }
+      console.log("File upload failed, imageUrl not set.");
     }
   };
 
@@ -158,10 +140,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       features: featuresArray,
     };
     
-    if (process.env.NODE_ENV !== 'production') {
-      console.log("Submitting form data:", processedData);
-      console.log("Processed imageUrl:", processedData.imageUrl);
-    }
+    console.log("Submitting form data:", processedData);
+    console.log("Processed imageUrl:", processedData.imageUrl);
     // Pass processedData directly, imageUrl should already be set by handleAddImage or editingService
     const success = await onSubmit(processedData); 
 
