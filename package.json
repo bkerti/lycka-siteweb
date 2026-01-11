@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:all": "concurrently \"npm run dev\" \"npm run start --prefix backend\"",
-    "build": "vite build",
+    "build": "echo '{\"version\":\"'$(git rev-parse HEAD)'\"}' > public/version.json && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"

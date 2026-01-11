@@ -9,6 +9,7 @@ import { ProjectsProvider } from "./providers/ProjectsProvider";
 import { HomeModelsProvider } from "./providers/HomeModelsProvider";
 import { ServicesProvider } from "./providers/ServicesProvider";
 import ScrollToTop from "./components/ScrollToTop";
+import { useVersionChecker } from "./hooks/useVersionChecker"; // Import the new hook
 
 const Index = lazy(() => import("./pages/Index"));
 const Services = lazy(() => import("./pages/Services"));
@@ -93,42 +94,46 @@ const LyckaHomeDetailWithRedirect = () => {
   return null;
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <BlogProvider>
-      <TestimonialsProvider>
-        <ProjectsProvider>
-          <HomeModelsProvider>
-            <ServicesProvider>
-              <BrowserRouter>
-                <ScrollToTop />
-                <PageViewTracker />
-                <Suspense fallback={<div>Chargement...</div>}>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/services" element={<Services />} />
-                    <Route path="/projects" element={<Projects />} />
-                    <Route path="/lycka-home" element={<LyckaHome />} />
-                    <Route path="/lycka-home/:id" element={<LyckaHomeDetail />} />
-                    <Route path="/gallery" element={<Gallery />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/admin" element={<AdminWithStateRouting />} />
-                    <Route path="/admin/projects" element={<ProjectDetailWithRedirect />} />
-                    <Route path="/admin/services" element={<ServiceDetailWithRedirect />} />
-                    <Route path="/admin/lycka-home" element={<LyckaHomeDetailWithRedirect />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </Suspense>
-              </BrowserRouter>
-            </ServicesProvider>
-          </HomeModelsProvider>
-        </ProjectsProvider>
-      </TestimonialsProvider>
-    </BlogProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  useVersionChecker(); // Call the hook here
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <BlogProvider>
+        <TestimonialsProvider>
+          <ProjectsProvider>
+            <HomeModelsProvider>
+              <ServicesProvider>
+                <BrowserRouter>
+                  <ScrollToTop />
+                  <PageViewTracker />
+                  <Suspense fallback={<div>Chargement...</div>}>
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/services" element={<Services />} />
+                      <Route path="/projects" element={<Projects />} />
+                      <Route path="/lycka-home" element={<LyckaHome />} />
+                      <Route path="/lycka-home/:id" element={<LyckaHomeDetail />} />
+                      <Route path="/gallery" element={<Gallery />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/admin" element={<AdminWithStateRouting />} />
+                      <Route path="/admin/projects" element={<ProjectDetailWithRedirect />} />
+                      <Route path="/admin/services" element={<ServiceDetailWithRedirect />} />
+                      <Route path="/admin/lycka-home" element={<LyckaHomeDetailWithRedirect />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </Suspense>
+                </BrowserRouter>
+              </ServicesProvider>
+            </HomeModelsProvider>
+          </ProjectsProvider>
+        </TestimonialsProvider>
+      </BlogProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
