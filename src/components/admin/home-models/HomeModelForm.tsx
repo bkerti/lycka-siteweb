@@ -145,7 +145,7 @@ const HomeModelForm = ({
       <Card>
         <CardContent className="pt-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pb-20 md:pb-0">
               <FormField
                 control={form.control}
                 name="name"
@@ -294,17 +294,19 @@ const HomeModelForm = ({
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-2 pt-2">
-                <Button 
-                  type="button" 
-                  variant="outline"
-                  onClick={onReset}
-                >
-                  Annuler
-                </Button>
-                <Button type="submit">
-                  {editingModel ? 'Mettre à jour' : 'Ajouter'}
-                </Button>
+              <div className="fixed bottom-0 left-0 right-0 p-4 bg-background shadow-lg z-20 md:static md:p-0 md:bg-transparent md:shadow-none">
+                <div className="flex justify-end space-x-2 pt-2 md:pt-0">
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={onReset}
+                  >
+                    Annuler
+                  </Button>
+                  <Button type="submit">
+                    {editingModel ? 'Mettre à jour' : 'Ajouter'}
+                  </Button>
+                </div>
               </div>
             </form>
           </Form>

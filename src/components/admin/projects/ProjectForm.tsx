@@ -137,7 +137,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4 pb-20 md:pb-0">
         <FormField
           control={form.control}
           name="title"
@@ -278,17 +278,19 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           </div>
         </div>
 
-        <div className="flex justify-end space-x-2 pt-2">
-          <Button 
-            type="button" 
-            variant="outline"
-            onClick={onCancel}
-          >
-            Annuler
-          </Button>
-          <Button type="submit">
-            {editingProject ? 'Mettre à jour' : 'Ajouter'}
-          </Button>
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-background shadow-lg z-20 md:static md:p-0 md:bg-transparent md:shadow-none">
+          <div className="flex justify-end space-x-2 pt-2 md:pt-0">
+            <Button 
+              type="button" 
+              variant="outline"
+              onClick={onCancel}
+            >
+              Annuler
+            </Button>
+            <Button type="submit">
+              {editingProject ? 'Mettre à jour' : 'Ajouter'}
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

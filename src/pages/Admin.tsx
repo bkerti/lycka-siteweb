@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { SidebarProvider, Sidebar, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarProvider, Sidebar, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import AdminLogin from "@/components/admin/AdminLogin";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import AdminContent from "@/components/admin/AdminContent";
@@ -50,6 +50,11 @@ const Admin = () => {
                 />
               </Sidebar>
               <SidebarInset>
+                {/* Fixed header for mobile navigation */}
+                <div className="md:hidden sticky top-0 bg-background z-10 p-2 flex items-center shadow-sm">
+                  <SidebarTrigger className="mr-2" />
+                  <h1 className="text-lg font-semibold capitalize">{activeSection.replace('-', ' ')}</h1>
+                </div>
                 <AdminContent 
                   key={activeSection}
                   activeSection={activeSection} 
