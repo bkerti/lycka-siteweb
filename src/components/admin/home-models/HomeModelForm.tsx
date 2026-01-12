@@ -103,24 +103,28 @@ const HomeModelForm = ({
 
   const handleAddMedia = async () => {
     const mediaUrl = form.getValues("mediaUrl");
+    const newMediaItemsToAdd: { url: string; type: string }[] = []; // Collect all items here
 
     if (selectedImageFiles.length > 0) {
       const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
       const urls = await Promise.all(uploadPromises);
       urls.forEach(url => {
         if (url) {
-          onAddMedia({ url, type: 'image' });
+          newMediaItemsToAdd.push({ url, type: 'image' });
         }
       });
     } else if (mediaUrl) {
-      onAddMedia({ url: mediaUrl, type: 'image' });
+      newMediaItemsToAdd.push({ url: mediaUrl, type: 'image' });
     }
 
-    form.setValue("mediaUrl", "");
-    setSelectedImageFiles([]);
-    imagePreviews.forEach(p => URL.revokeObjectURL(p));
-    setImagePreviews([]);
-    toast.success(`${selectedImageFiles.length || (mediaUrl ? 1 : 0)} média(s) ajouté(s) à la galerie`);
+    if (newMediaItemsToAdd.length > 0) {
+      onAddMedia(newMediaItemsToAdd); // Call once with the array
+      form.setValue("mediaUrl", "");
+      setSelectedImageFiles([]);
+      imagePreviews.forEach(p => URL.revokeObjectURL(p));
+      setImagePreviews([]);
+      // Toast message is handled by addMediaToGallery now
+    }
   };
 
 

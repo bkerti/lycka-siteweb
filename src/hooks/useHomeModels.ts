@@ -110,10 +110,11 @@ export function useHomeModels() {
     setCurrentMedia([]);
   };
 
-  const addMediaToGallery = (mediaItem: MediaItem) => {
-    if (mediaItem.url) {
-      setCurrentMedia([...currentMedia, mediaItem]);
-      toast({ title: "Média ajouté", description: "Le média a été ajouté à la galerie" });
+  const addMediaToGallery = (newMediaItems: MediaItem[]) => { // Accepts an array
+    const validNewMediaItems = newMediaItems.filter(item => item.url);
+    if (validNewMediaItems.length > 0) {
+      setCurrentMedia(prevMedia => [...prevMedia, ...validNewMediaItems]); // Use functional update
+      toast({ title: "Média(s) ajouté(s)", description: `${validNewMediaItems.length} média(s) ajouté(s) à la galerie` });
     }
   };
 
