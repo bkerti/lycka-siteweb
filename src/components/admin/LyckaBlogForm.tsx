@@ -71,6 +71,7 @@ const LyckaBlogForm = ({ item, onSave, onCancel }) => {
   };
 
   const handleAddMedia = async () => {
+    alert(`Début du téléversement. Nombre de fichiers sélectionnés : ${selectedImageFiles.length}`);
     try {
       let uploadedUrls: { url: string; type: string }[] = [];
 
@@ -91,9 +92,11 @@ const LyckaBlogForm = ({ item, onSave, onCancel }) => {
         setImagePreviews([]);
         toast.success(`${uploadedUrls.length} média(s) ajouté(s) à la galerie`);
       } else if (selectedImageFiles.length > 0) {
+        alert("ERREUR: Le téléversement a échoué. Le toast d'erreur devrait s'afficher maintenant.");
         toast.error("Le téléversement des images a échoué. Aucune URL n'a été retournée.");
       }
     } catch (error) {
+      alert("ERREUR: Une erreur inattendue s'est produite dans handleAddMedia.");
       console.error("Erreur lors de l'ajout de média:", error);
       toast.error("Une erreur s'est produite lors du téléversement.");
     }
