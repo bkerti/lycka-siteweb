@@ -132,7 +132,7 @@ const Contact = () => {
                 {/* Map */}
                 <div className="mt-8 rounded-lg overflow-hidden shadow-lg h-[300px]">
                   <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.2314698105456!2d2.3309799158429897!3d48.86380237928789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e1bdff0bf2f%3A0x5592409467436251!2zUGFyaXMsIEZyYW5jZQ!5e0!3m2!1sen!2sus!4v1635098872950!5m2!1sen!2sus" 
+                    src="https://maps.google.com/maps?q=Bali%20-Face%20entrelec%20(Rue%20de%20l%E2%80%99union%20francaise%20)&t=&z=13&ie=UTF8&iwloc=&output=embed" 
                     width="100%" 
                     height="100%" 
                     style={{ border: 0 }} 
