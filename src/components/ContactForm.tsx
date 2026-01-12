@@ -78,6 +78,15 @@ const ContactForm = () => {
           subject: "",
           message: "",
         });
+
+        // --- WhatsApp Redirection Logic ---
+        const whatsappNumber = "237691759654"; // Le premier numéro
+        const whatsappMessage = `Nom: ${formData.name}%0AEmail: ${formData.email}%0ATéléphone: ${formData.phone}%0ASujet: ${formData.subject}%0AMessage: ${formData.message}`;
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+        
+        window.open(whatsappUrl, '_blank');
+        // --- End WhatsApp Redirection Logic ---
+
       }, (error) => {
         console.error("EMAILJS ERROR:", error);
         toast({
