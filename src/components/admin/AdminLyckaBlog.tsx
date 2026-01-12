@@ -1,30 +1,31 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import ArticleImageCarousel from './lyckablog/ArticleImageCarousel';
-import { useBlog } from '@/hooks/useBlog'; // Add this import
+import { useBlog } from '@/hooks/useBlog';
 import LyckaBlogForm from './LyckaBlogForm';
 
 const AdminLyckaBlog = () => {
   const { articles, fetchArticles } = useBlog();
   const [editingArticle, setEditingArticle] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const formRef = useRef<HTMLDivElement>(null);
 
   const handleAdd = () => {
     setEditingArticle(null);
     setIsFormVisible(true);
   };
 
-  const handleEdit = (article) => {
+  const handleEdit = (article: any) => {
     setEditingArticle(article);
     setIsFormVisible(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
       const token = localStorage.getItem('adminToken');
       try {
-        await fetch(`/api/lycka-blog/${id}`, { 
+        await fetch(`/api/lycka-blog/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` },
         });
@@ -35,7 +36,7 @@ const AdminLyckaBlog = () => {
     }
   };
 
-  const handleSave = async (article) => {
+  const handleSave = async (article: any) => {
     const url = article.id ? `/api/lycka-blog/${article.id}` : '/api/lycka-blog';
     const method = article.id ? 'PUT' : 'POST';
     const token = localStorage.getItem('adminToken');
@@ -43,7 +44,7 @@ const AdminLyckaBlog = () => {
     try {
       await fetch(url, {
         method,
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
@@ -62,8 +63,21 @@ const AdminLyckaBlog = () => {
     setEditingArticle(null);
   };
 
+  useEffect(() => {
+    if (isFormVisible && formRef.current) {
+      // Timeout to ensure the element is in the DOM and rendered
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [isFormVisible]);
+
   if (isFormVisible) {
-    return <LyckaBlogForm item={editingArticle} onSave={handleSave} onCancel={handleCancel} />;
+    return (
+      <div ref={formRef}>
+        <LyckaBlogForm item={editingArticle} onSave={handleSave} onCancel={handleCancel} />
+      </div>
+    );
   }
 
   return (
@@ -73,7 +87,7 @@ const AdminLyckaBlog = () => {
         <Button onClick={handleAdd}>Ajouter un article</Button>
       </div>
       <div className="space-y-4">
-        {articles.map((article) => (
+        {articles.map((article: any) => (
           <div key={article.id} className="p-4 border rounded-lg flex items-center gap-4">
             {article.media && article.media.length > 0 && (
               <div className="w-48">

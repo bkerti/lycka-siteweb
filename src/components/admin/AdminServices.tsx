@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
@@ -25,6 +25,15 @@ const AdminServices = () => {
     action: 'submit', 
     data: null
   });
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (editingService !== undefined) {
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [editingService]);
 
   const handleDeleteRequest = (id: string) => {
     setDialogState({ isOpen: true, action: 'delete', data: id });
@@ -68,7 +77,7 @@ const AdminServices = () => {
           onDelete={handleDeleteRequest}
         />
 
-        <div>
+        <div ref={formRef}>
           <h2 className="text-lg font-medium mb-4">
             {editingService ? 'Modifier le service' : 'Ajouter un service'}
           </h2>

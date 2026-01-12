@@ -1,4 +1,5 @@
 
+import { useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useHomeModelsContext } from "@/hooks/useHomeModelsContext";
@@ -17,6 +18,16 @@ const AdminLyckaHome = () => {
     addMediaToGallery,
     removeMediaFromGallery
   } = useHomeModelsContext();
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Scroll to form when a new model is created or a model is selected for editing
+    if (editingModel !== undefined) {
+        setTimeout(() => {
+            formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+  }, [editingModel]);
 
   return (
     <div>
@@ -37,14 +48,16 @@ const AdminLyckaHome = () => {
         />
 
         {/* Formulaire d'édition */}
-        <HomeModelForm 
-          editingModel={editingModel}
-          currentMedia={currentMedia}
-          onSubmit={handleSubmit}
-          onReset={resetForm}
-          onAddMedia={addMediaToGallery}
-          onRemoveMedia={removeMediaFromGallery}
-        />
+        <div ref={formRef}>
+          <HomeModelForm 
+            editingModel={editingModel}
+            currentMedia={currentMedia}
+            onSubmit={handleSubmit}
+            onReset={resetForm}
+            onAddMedia={addMediaToGallery}
+            onRemoveMedia={removeMediaFromGallery}
+          />
+        </div>
       </div>
     </div>
   );

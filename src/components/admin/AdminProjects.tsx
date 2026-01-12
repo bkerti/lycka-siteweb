@@ -1,4 +1,5 @@
 
+import { useRef, useEffect } from "react";
 import ProjectHeader from "./projects/ProjectHeader";
 import ProjectList from "./projects/ProjectList";
 import ProjectFormCard from "./projects/ProjectFormCard";
@@ -14,6 +15,18 @@ const AdminProjects = () => {
     handleSubmit,
     handleCancel
   } = useProjectsContext();
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // `editingProject` is `undefined` on initial load. 
+    // It becomes `null` for "new" or an object for "edit".
+    // We scroll in both cases, but not on initial load.
+    if (editingProject !== undefined) {
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [editingProject]);
 
   return (
     <div>
@@ -29,11 +42,13 @@ const AdminProjects = () => {
         />
 
         {/* Formulaire d'édition */}
-        <ProjectFormCard
-          editingProject={editingProject}
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-        />
+        <div ref={formRef}>
+          <ProjectFormCard
+            editingProject={editingProject}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+          />
+        </div>
       </div>
     </div>
   );
