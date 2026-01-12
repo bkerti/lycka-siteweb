@@ -96,7 +96,10 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-xl font-medium mb-1">Téléphone</h3>
-                      <p className="text-muted-foreground">+237691759654 / +237657241120</p>
+                      <p className="text-muted-foreground">
+                        <a href="https://wa.me/237691759654" target="_blank" rel="noopener noreferrer" className="hover:underline">+237691759654</a> / 
+                        <a href="https://wa.me/237657241120" target="_blank" rel="noopener noreferrer" className="hover:underline">+237657241120</a>
+                      </p>
                     </div>
                   </div>
                   
