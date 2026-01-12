@@ -11,7 +11,7 @@ export const createService = async (serviceData: Omit<Service, 'id'>): Promise<S
   const { title, description, icon, imageUrl, features } = serviceData;
   const { rows } = await sql<Service>`
     INSERT INTO services (title, description, icon, imageUrl, features) 
-    VALUES (${title}, ${description}, ${icon}, ${imageUrl}, ${features as any}) 
+    VALUES (${title}, ${description}, ${icon}, ${imageUrl}, ${JSON.stringify(features)}) 
     RETURNING *
   `;
   return rows[0];
@@ -21,7 +21,7 @@ export const updateService = async (id: string, serviceData: Partial<Omit<Servic
   const { title, description, icon, imageUrl, features } = serviceData;
   const { rows } = await sql<Service>`
     UPDATE services 
-    SET title = ${title}, description = ${description}, icon = ${icon}, imageUrl = ${imageUrl}, features = ${features as any} 
+    SET title = ${title}, description = ${description}, icon = ${icon}, imageUrl = ${imageUrl}, features = ${JSON.stringify(features)} 
     WHERE id = ${id} 
     RETURNING *
   `;
