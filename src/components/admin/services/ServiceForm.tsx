@@ -37,6 +37,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  const [isUploading, setIsUploading] = useState(false);
+
   // Set initial form values and image preview when editingService changes
   useEffect(() => {
     if (editingService) {
@@ -114,12 +116,17 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
       return;
     }
 
-    const uploadedUrl = await uploadFile(selectedFile);
-    if (uploadedUrl) {
-      form.setValue("imageUrl", uploadedUrl);
-      setSelectedFile(null); // Clear selected file from input
-      setImagePreview(uploadedUrl); // Update preview to the permanent URL
-      toast.success("Image ajoutée avec succès !");
+    setIsUploading(true); // Start loading
+    try {
+      const uploadedUrl = await uploadFile(selectedFile);
+      if (uploadedUrl) {
+        form.setValue("imageUrl", uploadedUrl);
+        setSelectedFile(null); // Clear selected file from input
+        setImagePreview(uploadedUrl); // Update preview to the permanent URL
+        toast.success("Image ajoutée avec succès !");
+      }
+    } finally {
+      setIsUploading(false); // End loading
     }
   };
 
@@ -217,8 +224,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
                                         
                                         {selectedFile ? ( // If a new file is selected, show Add/Cancel for new file
                                             <>
-                                                <Button type="button" onClick={handleAddImage} disabled={!selectedFile}>
-                                                    <Upload className="mr-2" size={16} /> Ajouter l'image
+                                                <Button type="button" onClick={handleAddImage} disabled={!selectedFile || isUploading}>
+                                                    {isUploading ? "Téléchargement..." : <><Upload className="mr-2" size={16} /> Ajouter l'image</>}
                                                 </Button>
                                                 <Button type="button" variant="outline" size="sm" onClick={() => {
                                                     setSelectedFile(null);

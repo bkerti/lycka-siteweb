@@ -28,6 +28,7 @@ const HomeModelForm = ({
 }: HomeModelFormProps) => {
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -105,25 +106,30 @@ const HomeModelForm = ({
     const mediaUrl = form.getValues("mediaUrl");
     const newMediaItemsToAdd: { url: string; type: string }[] = []; // Collect all items here
 
-    if (selectedImageFiles.length > 0) {
-      const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
-      const urls = await Promise.all(uploadPromises);
-      urls.forEach(url => {
-        if (url) {
-          newMediaItemsToAdd.push({ url, type: 'image' });
-        }
-      });
-    } else if (mediaUrl) {
-      newMediaItemsToAdd.push({ url: mediaUrl, type: 'image' });
-    }
+    setIsUploadingMedia(true); // Start loading
+    try {
+      if (selectedImageFiles.length > 0) {
+        const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
+        const urls = await Promise.all(uploadPromises);
+        urls.forEach(url => {
+          if (url) {
+            newMediaItemsToAdd.push({ url, type: 'image' });
+          }
+        });
+      } else if (mediaUrl) {
+        newMediaItemsToAdd.push({ url: mediaUrl, type: 'image' });
+      }
 
-    if (newMediaItemsToAdd.length > 0) {
-      onAddMedia(newMediaItemsToAdd); // Call once with the array
-      form.setValue("mediaUrl", "");
-      setSelectedImageFiles([]);
-      imagePreviews.forEach(p => URL.revokeObjectURL(p));
-      setImagePreviews([]);
-      // Toast message is handled by addMediaToGallery now
+      if (newMediaItemsToAdd.length > 0) {
+        onAddMedia(newMediaItemsToAdd); // Call once with the array
+        form.setValue("mediaUrl", "");
+        setSelectedImageFiles([]);
+        imagePreviews.forEach(p => URL.revokeObjectURL(p));
+        setImagePreviews([]);
+        // Toast message is handled by addMediaToGallery now
+      }
+    } finally {
+      setIsUploadingMedia(false); // End loading
     }
   };
 
@@ -287,8 +293,9 @@ const HomeModelForm = ({
                       type="button" 
                       onClick={handleAddMedia}
                       className="self-end"
+                      disabled={isUploadingMedia || (!selectedImageFiles.length && !form.getValues("mediaUrl"))}
                     >
-                      Ajouter
+                      {isUploadingMedia ? "Ajout en cours..." : "Ajouter"}
                     </Button>
                   </div>
                 </div>

@@ -25,6 +25,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   const [currentMedia, setCurrentMedia] = useState<{ url: string; type: string }[]>(editingProject?.media || []);
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false); // New state
 
   const form = useForm({
     defaultValues: {
@@ -88,24 +89,29 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     const mediaUrl = form.getValues("mediaUrl");
     let uploadedUrls: { url: string; type: string }[] = [];
 
-    if (selectedImageFiles.length > 0) {
-      const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
-      const urls = await Promise.all(uploadPromises);
-      urls.forEach(url => {
-        if (url) {
-          uploadedUrls.push({ url, type: 'image' });
-        }
-      });
-    } else if (mediaUrl) {
-      uploadedUrls.push({ url: mediaUrl, type: 'image' });
-    }
+    setIsUploadingMedia(true); // Start loading
+    try {
+      if (selectedImageFiles.length > 0) {
+        const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
+        const urls = await Promise.all(uploadPromises);
+        urls.forEach(url => {
+          if (url) {
+            uploadedUrls.push({ url, type: 'image' });
+          }
+        });
+      } else if (mediaUrl) {
+        uploadedUrls.push({ url: mediaUrl, type: 'image' });
+      }
 
-    if (uploadedUrls.length > 0) {
-      setCurrentMedia([...currentMedia, ...uploadedUrls]);
-      form.setValue("mediaUrl", "");
-      setSelectedImageFiles([]);
-      setImagePreviews([]);
-      toast.success(`${uploadedUrls.length} média(s) ajouté(s) à la galerie`);
+      if (uploadedUrls.length > 0) {
+        setCurrentMedia([...currentMedia, ...uploadedUrls]);
+        form.setValue("mediaUrl", "");
+        setSelectedImageFiles([]);
+        setImagePreviews([]);
+        toast.success(`${uploadedUrls.length} média(s) ajouté(s) à la galerie`);
+      }
+    } finally {
+      setIsUploadingMedia(false); // End loading
     }
   };
 
@@ -271,8 +277,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 type="button" 
                 onClick={handleAddMedia}
                 className="self-end"
+                disabled={isUploadingMedia || (!selectedImageFiles.length && !form.getValues("mediaUrl"))}
               >
-                Ajouter
+                {isUploadingMedia ? "Ajout en cours..." : "Ajouter"}
               </Button>
             </div>
           </div>
