@@ -135,7 +135,7 @@ const Footer = () => {
                   />
                 </svg>
                 <span className="text-gray-300">
-                  123 Rue de l'Architecture, 75001 Paris
+                  Bali -Face entrelec (Rue de l’union francaise )
                 </span>
               </li>
               <li className="flex items-start">
