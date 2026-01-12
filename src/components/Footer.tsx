@@ -17,7 +17,7 @@ const Footer = () => {
               Spécialiste en génie civil et architecture, LYCKA vous accompagne dans tous vos projets de construction et de rénovation.
             </p>
             <div className="flex space-x-4 mt-2">
-              <a href="#" className="text-white hover:text-gray-300 transition-colors">
+              <a href="https://www.facebook.com/share/19z23EdWcv/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                 <svg
                   className="w-6 h-6"
                   fill="currentColor"
@@ -31,7 +31,7 @@ const Footer = () => {
                   />
                 </svg>
               </a>
-              <a href="#" className="text-white hover:text-gray-300 transition-colors">
+              <a href="https://www.instagram.com/lycka_showroom?igsh=ZGI4M2xwamZ4bmIx" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-300 transition-colors">
                 <svg
                   className="w-6 h-6"
                   fill="currentColor"
