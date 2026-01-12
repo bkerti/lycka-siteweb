@@ -56,7 +56,7 @@ const ContactForm = () => {
 
     // --- WhatsApp Redirection Logic (MOVED HERE) ---
     const whatsappNumber = "237691759654"; // Le premier numéro
-    const whatsappMessage = `Nom: ${formData.name}%0AEmail: ${formData.email}%0ATéléphone: ${formData.phone}%0ASujet: ${formData.subject}%0AMessage: ${formData.message}`;
+    const whatsappMessage = `Nom: ${formData.name}\nEmail: ${formData.email}\nTéléphone: ${formData.phone}\nSujet: ${formData.subject}\nMessage: ${formData.message}`;
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
     
     window.open(whatsappUrl, '_blank');
