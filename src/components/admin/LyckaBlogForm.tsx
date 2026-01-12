@@ -1,4 +1,5 @@
 
+import imageCompression from 'browser-image-compression';
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -65,40 +66,49 @@ const LyckaBlogForm = ({ item, onSave, onCancel }) => {
       return data.url; // Vercel Blob returns 'url'
     } catch (error) {
       console.error(`Error uploading file:`, error);
-      toast.error(`Échec du téléchargement du fichier.`);
+      toast.error(`Échec du téléchargement du fichier : ${file.name}`);
       return null;
     }
   };
 
   const handleAddMedia = async () => {
-    alert(`Début du téléversement. Nombre de fichiers sélectionnés : ${selectedImageFiles.length}`);
-    try {
-      let uploadedUrls: { url: string; type: string }[] = [];
+    if (selectedImageFiles.length === 0) {
+      return;
+    }
 
-      if (selectedImageFiles.length > 0) {
-        const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
-        const urls = await Promise.all(uploadPromises);
-        urls.forEach(url => {
-          if (url) {
-            uploadedUrls.push({ url, type: 'image' });
-          }
-        });
-      }
+    toast.info('Compression des images en cours...');
+
+    try {
+      const compressionOptions = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
+
+      const compressionPromises = selectedImageFiles.map(file => 
+        imageCompression(file, compressionOptions)
+      );
+      const compressedFiles = await Promise.all(compressionPromises);
+      
+      toast.info('Téléversement des images compressées...');
+
+      const uploadPromises = compressedFiles.map(file => uploadFile(file));
+      const urls = await Promise.all(uploadPromises);
+      
+      const uploadedUrls = urls.filter(url => url).map(url => ({ url, type: 'image' }));
 
       if (uploadedUrls.length > 0) {
-        setMedia([...media, ...uploadedUrls]);
+        setMedia(prevMedia => [...prevMedia, ...uploadedUrls]);
         setSelectedImageFiles([]);
         imagePreviews.forEach(p => URL.revokeObjectURL(p));
         setImagePreviews([]);
-        toast.success(`${uploadedUrls.length} média(s) ajouté(s) à la galerie`);
-      } else if (selectedImageFiles.length > 0) {
-        alert("ERREUR: Le téléversement a échoué. Le toast d'erreur devrait s'afficher maintenant.");
-        toast.error("Le téléversement des images a échoué. Aucune URL n'a été retournée.");
+        toast.success(`${uploadedUrls.length} média(s) ajouté(s) avec succès.`);
+      } else {
+        toast.error("Le téléversement des images a échoué après la compression.");
       }
     } catch (error) {
-      alert("ERREUR: Une erreur inattendue s'est produite dans handleAddMedia.");
-      console.error("Erreur lors de l'ajout de média:", error);
-      toast.error("Une erreur s'est produite lors du téléversement.");
+      console.error("Erreur lors de la compression ou du téléversement:", error);
+      toast.error("Une erreur s'est produite lors de la compression ou du téléversement.");
     }
   };
 
