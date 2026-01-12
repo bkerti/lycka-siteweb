@@ -10,14 +10,14 @@ import { HomeModelsProvider } from "./providers/HomeModelsProvider";
 import { ServicesProvider } from "./providers/ServicesProvider";
 import ScrollToTop from "./components/ScrollToTop";
 import { useVersionChecker } from "./hooks/useVersionChecker"; // Import the new hook
+import Index from "./pages/Index";
+import Services from "./pages/Services";
+import Projects from "./pages/Projects";
+import LyckaHome from "./pages/LyckaHome";
+import Gallery from "./pages/Gallery";
+import Contact from "./pages/Contact";
 
-const Index = lazy(() => import("./pages/Index"));
-const Services = lazy(() => import("./pages/Services"));
-const Projects = lazy(() => import("./pages/Projects"));
-const LyckaHome = lazy(() => import("./pages/LyckaHome"));
 const LyckaHomeDetail = lazy(() => import("./pages/LyckaHomeDetail"));
-const Gallery = lazy(() => import("./pages/Gallery"));
-const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Admin = lazy(() => import("./pages/Admin"));
 
