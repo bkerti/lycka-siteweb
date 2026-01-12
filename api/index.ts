@@ -414,32 +414,56 @@ app.post('/api/visits', async (req, res) => {
 });
 
 app.get('/api/analytics/visits-summary', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req, res) => {
-    const range = req.query.range as string || 'daily'; // default to daily
-
-    let dateTruncUnit: string;
-
-    switch (range) {
-        case 'weekly':
-            dateTruncUnit = 'week';
-            break;
-        case 'monthly':
-            dateTruncUnit = 'month';
-            break;
-        case 'daily':
-        default:
-            dateTruncUnit = 'day';
-            break;
-    }
+    const range = req.query.range as string || 'day';
 
     try {
-        const { rows } = await sql`
-            SELECT 
-                DATE_TRUNC(${dateTruncUnit}, visit_timestamp) as period,
-                COUNT(id) as count
-            FROM visits
-            GROUP BY period
-            ORDER BY period ASC;
-        `;
+        let query;
+        if (range === 'day') {
+            query = sql`
+                SELECT 
+                    EXTRACT(HOUR FROM visit_timestamp) as hour,
+                    COUNT(id) as count
+                FROM visits
+                WHERE visit_timestamp >= NOW() - INTERVAL '1 day'
+                GROUP BY hour
+                ORDER BY hour ASC;
+            `;
+        } else if (range === 'week') {
+            query = sql`
+                SELECT 
+                    DATE_TRUNC('day', visit_timestamp) as date,
+                    EXTRACT(HOUR FROM visit_timestamp) as hour,
+                    COUNT(id) as count
+                FROM visits
+                WHERE visit_timestamp >= NOW() - INTERVAL '7 day'
+                GROUP BY date, hour
+                ORDER BY date, hour ASC;
+            `;
+        } else if (range === 'month') {
+            query = sql`
+                SELECT 
+                    DATE_TRUNC('day', visit_timestamp) as date,
+                    COUNT(id) as count
+                FROM visits
+                WHERE visit_timestamp >= NOW() - INTERVAL '30 day'
+                GROUP BY date
+                ORDER BY date ASC;
+            `;
+        } else if (range === 'year') {
+            query = sql`
+                SELECT 
+                    DATE_TRUNC('month', visit_timestamp) as date,
+                    COUNT(id) as count
+                FROM visits
+                WHERE visit_timestamp >= NOW() - INTERVAL '1 year'
+                GROUP BY date
+                ORDER BY date ASC;
+            `;
+        } else {
+            return res.status(400).json({ error: 'Invalid range parameter' });
+        }
+
+        const { rows } = await query;
         res.json(rows);
     } catch (err) {
         console.error('Error fetching visit summary:', err);

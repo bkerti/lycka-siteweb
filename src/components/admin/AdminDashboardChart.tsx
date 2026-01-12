@@ -2,18 +2,19 @@ import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, TooltipProps, Cell } from 'recharts';
 import { Button } from "@/components/ui/button";
 
-// Define the structure of our analytics data from the API
+// Updated interface to reflect API changes
 interface VisitData {
   date?: string;
   hour?: number;
-  count: string; // Count is a string as it comes from the DB
+  count: string;
 }
 
-// Define the structure for the formatted chart data
+// Chart data structure remains the same
 interface ChartData {
   name: string; 
   visits: number;
   hourly?: { [hour: string]: number };
+  isPeak?: boolean;
 }
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
@@ -27,8 +28,8 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
           <div className="mt-2">
             <p className="font-semibold">Détail par heure :</p>
             <ul className="list-disc pl-4">
-              {Object.entries(data.hourly).map(([hour, count]) => (
-                <li key={hour}>{`${hour}h : ${count} visiteur(s)`}</li>
+              {Object.entries(data.hourly).sort(([a], [b]) => parseInt(a) - parseInt(b)).map(([hour, count]) => (
+                <li key={hour}>{`${hour.padStart(2, '0')}h : ${count} visiteur(s)`}</li>
               ))}
             </ul>
           </div>
@@ -85,18 +86,52 @@ const AdminDashboardChart = () => {
               visits: visits,
             };
           });
+          
+          // Ensure all hours are present
+          const allHoursData: ChartData[] = [];
+          for (let i = 0; i < 24; i++) {
+            const hourData = hourlyData.find(d => parseInt(d.name.split(':')[0]) === i);
+            const isPeak = i === peakHour;
+            if (hourData) {
+              allHoursData.push({ ...hourData, isPeak });
+            } else {
+              allHoursData.push({ name: `${String(i).padStart(2, '0')}:00`, visits: 0, isPeak });
+            }
+          }
+          formattedData = allHoursData;
 
-          // Add isPeak property for highlighting
-          formattedData = hourlyData.map(item => ({
-            ...item,
-            isPeak: parseInt(item.name.split(':')[0]) === peakHour
-          }));
+        } else if (range === 'week') {
+            const aggregatedData = result.reduce((acc, item) => {
+                const dateObj = new Date(item.date!);
+                const dateLabel = `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
+                
+                if (!acc[dateLabel]) {
+                    acc[dateLabel] = { total: 0, hourly: {} };
+                }
+                
+                const visits = parseInt(item.count, 10);
+                acc[dateLabel].total += visits;
+                
+                const hour = String(item.hour!);
+                if (!acc[dateLabel].hourly[hour]) {
+                    acc[dateLabel].hourly[hour] = 0;
+                }
+                acc[dateLabel].hourly[hour] += visits;
 
-        } else {
+                return acc;
+            }, {} as { [key: string]: { total: number, hourly: { [hour: string]: number } } });
+
+            formattedData = Object.keys(aggregatedData).map(label => ({
+                name: label,
+                visits: aggregatedData[label].total,
+                hourly: aggregatedData[label].hourly,
+            }));
+
+        } else { // 'month' and 'year'
           const aggregatedData = result.reduce((acc, item) => {
             const dateObj = new Date(item.date!);
             let dateLabel = '';
-            if (range === 'week' || range === 'month') {
+            if (range === 'month') {
               dateLabel = `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
             } else if (range === 'year') {
               dateLabel = dateObj.toLocaleString('fr-FR', { month: 'long' });
@@ -165,12 +200,12 @@ const AdminDashboardChart = () => {
               <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
               <YAxis allowDecimals={false} stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
               <Tooltip 
-                cursor={{ fill: 'transparent' }}
+                cursor={{ fill: 'hsl(var(--accent))' }}
                 content={<CustomTooltip />}
               />
-              <Bar dataKey="visits" name="Visites">
+              <Bar dataKey="visits" name="Visites" radius={[4, 4, 0, 0]}>
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.isPeak ? "#ffc658" : "#8884d8"} />
+                  <Cell key={`cell-${index}`} fill={entry.isPeak ? 'hsl(var(--primary))' : 'hsl(var(--secondary))'} />
                 ))}
               </Bar>
             </BarChart>
