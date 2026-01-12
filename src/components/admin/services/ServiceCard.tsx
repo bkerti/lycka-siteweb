@@ -11,8 +11,6 @@ interface ServiceCardProps {
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onEdit, onDelete }) => {
-  console.log("ServiceCard rendering. service.imageUrl:", service.imageUrl);
-
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -20,17 +18,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onEdit, onDelete }) 
       </CardHeader>
       <CardContent className="pb-4">
         <div className="flex mb-2">
-          {service.imageUrl ? ( // Conditional rendering based on imageUrl
-            <img 
-              src={service.imageUrl} 
-              alt={service.title}
-              className="w-20 h-20 object-cover rounded mr-3"
-            />
-          ) : (
-            <div className="w-20 h-20 bg-gray-200 flex items-center justify-center rounded mr-3 text-sm text-gray-500">
-              No Image
-            </div>
-          )}
+          <img 
+            src={service.imageUrl} 
+            alt={service.title}
+            className="w-20 h-20 object-cover rounded mr-3"
+          />
           <p className="text-sm text-gray-600 line-clamp-3">{service.description}</p>
         </div>
       </CardContent>

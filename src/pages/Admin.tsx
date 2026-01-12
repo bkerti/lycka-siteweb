@@ -9,7 +9,6 @@ import { ProjectsProvider } from "@/providers/ProjectsProvider";
 
 import { HomeModelsProvider } from "@/providers/HomeModelsProvider";
 import { AdminThemeProvider } from "@/components/admin/AdminThemeProvider";
-import { Toaster } from "sonner";
 
 const Admin = () => {
   const [activeSection, setActiveSection] = useState<string>("overview");
@@ -38,7 +37,6 @@ const Admin = () => {
 
   return (
     <AdminThemeProvider>
-      <Toaster />
       <HomeModelsProvider>
         <ProjectsProvider>
           <SidebarProvider>

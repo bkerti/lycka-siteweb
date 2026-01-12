@@ -16,16 +16,6 @@ import *as testimonialService from './lib/services/testimonialService.js';
 import * as mediaInteractionService from './lib/services/mediaInteractionService.js';
 import type { User } from './lib/types.js';
 
-// Helper function to convert stream to buffer
-async function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
-        const chunks: Buffer[] = [];
-        stream.on('data', chunk => chunks.push(chunk));
-        stream.on('end', () => resolve(Buffer.concat(chunks)));
-        stream.on('error', reject);
-    });
-}
-
 const app = express();
 
 // Set up a whitelist of allowed origins
@@ -252,14 +242,11 @@ app.post('/api/upload', authenticateToken, authorizeRoles(['admin', 'super_admin
         return res.status(400).json({ error: 'Filename query parameter is required.' });
     }
     try {
-        const fileBuffer = await streamToBuffer(req); // Convert stream to buffer
-        const blob = await put(filename, fileBuffer, { // Pass buffer instead of req
+        const blob = await put(filename, req, { // Pass buffer instead of req
             access: 'public',
             token: process.env.BLOB_READ_WRITE_TOKEN,
             addRandomSuffix: true,
-            contentType: req.headers['content-type'], // Explicitly pass content type
         });
-        console.log("Vercel Blob put result:", blob); // Add this line
         return res.status(200).json(blob);
     } catch (error) {
         console.error('Upload error:', error);
