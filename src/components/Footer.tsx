@@ -171,8 +171,8 @@ const Footer = () => {
                   />
                 </svg>
                 <span className="text-gray-300">
-                  <a href="https://wa.me/237691759654?text=bienvenue%20chez%20lycka%20nous%20sommes%20a%20votre%20ecoute" target="_blank" rel="noopener noreferrer" className="hover:underline">+237691759654</a> / 
-                  <a href="https://wa.me/237657241120?text=bienvenue%20chez%20lycka%20nous%20sommes%20a%20votre%20ecoute" target="_blank" rel="noopener noreferrer" className="hover:underline">+237657241120</a>
+                  <a href="https://wa.me/237691759654?text=bonjour%20lycka%20je%20vous%20contactes%20suite%20a%20la%20visite%20de%20votre%20site%20web" target="_blank" rel="noopener noreferrer" className="hover:underline">+237691759654</a> / 
+                  <a href="https://wa.me/237657241120?text=bonjour%20lycka%20je%20vous%20contactes%20suite%20a%20la%20visite%20de%20votre%20site%20web" target="_blank" rel="noopener noreferrer" className="hover:underline">+237657241120</a>
                 </span>
               </li>
             </ul>
