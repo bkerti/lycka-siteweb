@@ -71,24 +71,31 @@ const LyckaBlogForm = ({ item, onSave, onCancel }) => {
   };
 
   const handleAddMedia = async () => {
-    let uploadedUrls: { url: string; type: string }[] = [];
+    try {
+      let uploadedUrls: { url: string; type: string }[] = [];
 
-    if (selectedImageFiles.length > 0) {
-      const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
-      const urls = await Promise.all(uploadPromises);
-      urls.forEach(url => {
-        if (url) {
-          uploadedUrls.push({ url, type: 'image' });
-        }
-      });
-    }
+      if (selectedImageFiles.length > 0) {
+        const uploadPromises = selectedImageFiles.map(file => uploadFile(file));
+        const urls = await Promise.all(uploadPromises);
+        urls.forEach(url => {
+          if (url) {
+            uploadedUrls.push({ url, type: 'image' });
+          }
+        });
+      }
 
-    if (uploadedUrls.length > 0) {
-      setMedia([...media, ...uploadedUrls]);
-      setSelectedImageFiles([]);
-      imagePreviews.forEach(p => URL.revokeObjectURL(p));
-      setImagePreviews([]);
-      toast.success(`${uploadedUrls.length} média(s) ajouté(s) à la galerie`);
+      if (uploadedUrls.length > 0) {
+        setMedia([...media, ...uploadedUrls]);
+        setSelectedImageFiles([]);
+        imagePreviews.forEach(p => URL.revokeObjectURL(p));
+        setImagePreviews([]);
+        toast.success(`${uploadedUrls.length} média(s) ajouté(s) à la galerie`);
+      } else if (selectedImageFiles.length > 0) {
+        toast.error("Le téléversement des images a échoué. Aucune URL n'a été retournée.");
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de média:", error);
+      toast.error("Une erreur s'est produite lors du téléversement.");
     }
   };
 
