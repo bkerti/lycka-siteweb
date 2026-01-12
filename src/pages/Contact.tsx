@@ -50,7 +50,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-xl font-medium mb-1">Adresse</h3>
-                      <p className="text-muted-foreground">123 Rue de l'Architecture, 75001 Paris, France</p>
+                      <p className="text-muted-foreground">Bali -Face entrelec (Rue de l’union francaise )</p>
                     </div>
                   </div>
                   
@@ -96,7 +96,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-xl font-medium mb-1">Téléphone</h3>
-                      <p className="text-muted-foreground">+237656186349</p>
+                      <p className="text-muted-foreground">+237691759654 / +237657241120</p>
                     </div>
                   </div>
                   
