@@ -3,6 +3,7 @@ import { Service } from '../types.js';
 
 export const getAllServices = async (): Promise<Service[]> => {
   const { rows } = await sql<Service>`SELECT * FROM services ORDER BY created_at ASC`;
+  console.log("Services fetched from DB (getAllServices):", rows.map(row => ({ id: row.id, title: row.title, imageUrl: row.imageUrl })));
   return rows;
 };
 
