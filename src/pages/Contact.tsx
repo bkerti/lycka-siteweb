@@ -97,8 +97,8 @@ const Contact = () => {
                     <div>
                       <h3 className="text-xl font-medium mb-1">Téléphone</h3>
                       <p className="text-muted-foreground">
-                        <a href="https://wa.me/237691759654" target="_blank" rel="noopener noreferrer" className="hover:underline">+237691759654</a> / 
-                        <a href="https://wa.me/237657241120" target="_blank" rel="noopener noreferrer" className="hover:underline">+237657241120</a>
+                        <a href="https://wa.me/237691759654?text=bienvenue%20chez%20lycka%20nous%20sommes%20a%20votre%20ecoute" target="_blank" rel="noopener noreferrer" className="hover:underline">+237691759654</a> / 
+                        <a href="https://wa.me/237657241120?text=bienvenue%20chez%20lycka%20nous%20sommes%20a%20votre%20ecoute" target="_blank" rel="noopener noreferrer" className="hover:underline">+237657241120</a>
                       </p>
                     </div>
                   </div>
