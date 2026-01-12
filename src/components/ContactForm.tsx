@@ -54,6 +54,16 @@ const ContactForm = () => {
     }
     console.log("1b. form.current is not null.");
 
+    // --- WhatsApp Redirection Logic (MOVED HERE) ---
+    const whatsappNumber = "237691759654"; // Le premier numéro
+    const whatsappMessage = `Nom: ${formData.name}%0AEmail: ${formData.email}%0ATéléphone: ${formData.phone}%0ASujet: ${formData.subject}%0AMessage: ${formData.message}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+    
+    window.open(whatsappUrl, '_blank');
+    console.log("1c. WhatsApp redirection attempted.");
+    // --- End WhatsApp Redirection Logic ---
+
+    // Now, proceed with EmailJS
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
@@ -61,55 +71,47 @@ const ContactForm = () => {
 
 
     if (!serviceId || !templateId || !publicKey) {
-      console.error("3. EmailJS environment variables are not set.");
+      console.error("3. EmailJS environment variables are not set. Email will not be sent.");
       toast({
-        title: "Erreur de configuration",
-        description: "Le service d'envoi d'emails n'est pas configuré.",
+        title: "Configuration manquante",
+        description: "Les variables d'environnement EmailJS ne sont pas configurées. L'email ne sera pas envoyé.",
         variant: "destructive",
       });
-      return;
+      // Do NOT return here, allow the rest of the function (setIsSubmitting(false)) to run
+    } else {
+        console.log("3a. EmailJS environment variables are set. Attempting to send email.");
+        setIsSubmitting(true); // Only disable button if we attempt EmailJS
+        console.log("4. setIsSubmitting(true) called.");
+
+        emailjs.sendForm(serviceId, templateId, form.current, publicKey)
+            .then(() => {
+                console.log("5. EmailJS sendForm Succeeded.");
+                toast({
+                title: "Message envoyé par email",
+                description: "Nous vous répondrons dans les plus brefs délais.",
+                });
+                setFormData({ // Clear form only if email send successful
+                name: "",
+                email: "",
+                phone: "",
+                subject: "",
+                message: "",
+                });
+            }, (error) => {
+                console.error("5. EmailJS sendForm FAILED:", error);
+                toast({
+                title: "Erreur d'envoi d'email",
+                description: "Une erreur est survenue lors de l'envoi du message par email.",
+                variant: "destructive",
+                });
+            })
+            .finally(() => {
+                console.log("6. EmailJS sendForm FINALLY block entered. Resetting submitting state.");
+                setIsSubmitting(false); // Re-enable button
+                console.log("6b. setIsSubmitting(false) called.");
+            });
     }
-    console.log("3a. EmailJS environment variables are set.");
-    
-    setIsSubmitting(true);
-    console.log("4. setIsSubmitting(true) called.");
-
-    emailjs.sendForm(serviceId, templateId, form.current, publicKey)
-      .then(() => {
-        console.log("5. EmailJS sendForm Succeeded.");
-        toast({
-          title: "Message envoyé",
-          description: "Nous vous répondrons dans les plus brefs délais.",
-        });
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          subject: "",
-          message: "",
-        });
-      }, (error) => {
-        console.error("5. EmailJS sendForm FAILED:", error);
-        toast({
-          title: "Erreur",
-          description: "Une erreur est survenue lors de l'envoi du message.",
-          variant: "destructive",
-        });
-      })
-      .finally(() => {
-        console.log("6. EmailJS sendForm FINALLY block entered.");
-        // --- WhatsApp Redirection Logic ---
-        const whatsappNumber = "237691759654"; // Le premier numéro
-        const whatsappMessage = `Nom: ${formData.name}%0AEmail: ${formData.email}%0ATéléphone: ${formData.phone}%0ASujet: ${formData.subject}%0AMessage: ${formData.message}`;
-        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-        
-        window.open(whatsappUrl, '_blank');
-        console.log("6a. WhatsApp redirection attempted.");
-        // --- End WhatsApp Redirection Logic ---
-
-        setIsSubmitting(false);
-        console.log("6b. setIsSubmitting(false) called.");
-      });
+  };
   };
 
   return (
