@@ -78,19 +78,30 @@ const Hero = ({
       className="relative w-full min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden"
     >
       {/* Carousel Images */}
-      {allImages.map((image, index) => (
-        <div 
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentIndex ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{
-            backgroundImage: `url(${image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-      ))}
+      {allImages.map((image, index) => {
+        const isCurrent = index === currentIndex;
+        // Calculate next and previous index for preloading
+        const isNext = index === (currentIndex + 1) % allImages.length;
+        const isPrev = index === (currentIndex - 1 + allImages.length) % allImages.length;
+        
+        // Only set background image if it's the current, next, or previous slide
+        // This ensures a smoother transition for adjacent slides while lazy-loading others
+        const shouldLoadImage = isCurrent || isNext || isPrev;
+
+        return (
+          <div 
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              isCurrent ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              backgroundImage: shouldLoadImage ? `url(${image})` : 'none',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        );
+      })}
       {overlay && (
         <div className="absolute inset-0 hero-gradient z-10"></div>
       )}
