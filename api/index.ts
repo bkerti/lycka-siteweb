@@ -238,15 +238,24 @@ if (process.env.NODE_ENV !== 'production') {
 // --- Upload ---
 app.post('/api/upload', authenticateToken, authorizeRoles(['admin', 'super_admin']), async (req: Request, res: Response) => {
     const filename = req.query.filename as string;
-    if (!filename) {
-        return res.status(400).json({ error: 'Filename query parameter is required.' });
+    if (!req.query.filename) {
+        return res.status(400).json({ message: '`filename` query parameter is required.' });
     }
+
     try {
-        const blob = await put(filename, req, { // Pass buffer instead of req
+        const bodyBuffer = await new Promise<Buffer>((resolve, reject) => {
+            const chunks: Buffer[] = [];
+            req.on('data', (chunk) => chunks.push(chunk));
+            req.on('end', () => resolve(Buffer.concat(chunks)));
+            req.on('error', (err) => reject(err));
+        });
+
+        const blob = await put(filename, bodyBuffer, {
             access: 'public',
             token: process.env.BLOB_READ_WRITE_TOKEN,
             addRandomSuffix: true,
         });
+
         return res.status(200).json(blob);
     } catch (error) {
         console.error('Upload error:', error);
